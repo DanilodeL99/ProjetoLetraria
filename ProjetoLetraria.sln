@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.37216.2 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjetoLetraria", "ProjetoLetraria\ProjetoLetraria.csproj", "{6F99DC3C-1A41-4F2D-B3DF-3FE4357E33DE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6F99DC3C-1A41-4F2D-B3DF-3FE4357E33DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F99DC3C-1A41-4F2D-B3DF-3FE4357E33DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F99DC3C-1A41-4F2D-B3DF-3FE4357E33DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F99DC3C-1A41-4F2D-B3DF-3FE4357E33DE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FFBA54B7-80B2-40F8-BA49-6B01B2A54BAF}
+	EndGlobalSection
+EndGlobal

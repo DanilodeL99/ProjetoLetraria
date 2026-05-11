@@ -1,0 +1,27 @@
+﻿@{
+    Layout = "_Layout";
+}
+<div class="row justify-content-center">
+    <div class="col-md-4 mt-5">
+        <div class="card shadow">
+            <div class="card-body">
+                <h3 class="text-center">Login</h3>
+                <form asp-action="Logar" method="post">
+                    <div class="mb-3">
+                        <label>E-mail</label>
+                        <input type="email" name="email" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label>Senha</label>
+                        <input type="password" name="senha" class="form-control" required />
+                    </div>
+                    @if (ViewBag.Erro != null)
+                    {
+                        <p class="text-danger">@ViewBag.Erro</p>
+                    }
+                    <button type="submit" class="btn btn-dark w-100">Entrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
