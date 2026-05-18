@@ -1,0 +1,247 @@
+﻿@model ProjetoLetraria.ViewModels.CadastroViewModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <title>Cadastro - Letraria</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial;
+        }
+
+        body {
+            background: #e8e0d8;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+        }
+
+        .container {
+            width: 600px;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+        }
+
+        .titulo {
+            font-size: 40px;
+            color: #0b7c80;
+            margin-bottom: 10px;
+        }
+
+        .subtitulo {
+            color: #777;
+            margin-bottom: 30px;
+        }
+
+        .campo {
+            margin-bottom: 20px;
+        }
+
+            .campo label {
+                display: block;
+                margin-bottom: 5px;
+            }
+            
+            .campo input,
+            .campo select {
+                width: 100%;
+                padding: 14px;
+                border: none;
+                border-radius: 10px;
+                background: #f1f1f1;
+            }
+
+        .botao {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: #0b7c80;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+            .botao:hover {
+                background: #095f61;
+            }
+
+        .validacao {
+            color: red;
+            font-size: 13px;
+        }
+
+        .link-login {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+            .link-login a {
+                color: #0b7c80;
+                text-decoration: none;
+                font-weight: bold;
+            }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <h1 class="titulo">Criar Conta</h1>
+
+        <p class="subtitulo">
+            Faça parte da Letraria
+        </p>
+
+        <form asp-controller="Login"
+              asp-action="Cadastro"
+              method="post">
+
+            <div class="campo">
+
+                <label>Nome</label>
+
+                <input asp-for="Nome"
+                       placeholder="Digite seu nome" />
+
+                <span asp-validation-for="Nome"
+                      class="validacao"></span>
+
+            </div>
+
+            <div class="campo">
+
+                <label>E-mail</label>
+
+                <input asp-for="Email"
+                       placeholder="Digite seu e-mail" />
+
+                <span asp-validation-for="Email"
+                      class="validacao"></span>
+
+            </div>
+
+            <div class="campo">
+
+                <label>Senha</label>
+
+                <input asp-for="Senha"
+                       type="password"
+                       placeholder="Digite sua senha" />
+
+                <span asp-validation-for="Senha"
+                      class="validacao"></span>
+
+            </div>
+
+            <div class="campo">
+
+                <label>Confirmar Senha</label>
+
+                <input asp-for="ConfirmarSenha"
+                       type="password"
+                       placeholder="Confirme sua senha" />
+
+                <span asp-validation-for="ConfirmarSenha"
+                      class="validacao"></span>
+
+            </div>
+
+            <div class="campo">
+
+                <label>Tipo de Usuário</label>
+
+                <select asp-for="TipoUsuario" id="tipoUsuario">
+
+                    <option value="">
+                        Selecione
+                    </option>
+
+                    <option value="ALUNO">
+                        Aluno
+                    </option>
+
+                    <option value="PROFESSOR">
+                        Professor
+                    </option>
+
+                </select>
+
+                <span asp-validation-for="TipoUsuario"
+                      class="validacao"></span>
+
+            </div>
+
+            <div class="campo" id="campoCndb" style="display:none;">
+
+                <label>CNDB</label>
+
+                <input asp-for="Cndb"
+                       placeholder="Digite sua CNDB" />
+
+                <span asp-validation-for="Cndb"
+                      class="validacao"></span>
+
+            </div>
+
+            <button type="submit" class="botao">
+                Criar Conta
+            </button>
+
+        </form>
+
+        <div class="link-login">
+
+            Já possui conta?
+
+            <a asp-controller="Login"
+               asp-action="Index">
+                Entrar
+            </a>
+
+        </div>
+
+    </div>
+
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+
+        const tipoUsuario =
+            document.getElementById("tipoUsuario");
+
+        const campoCndb =
+            document.getElementById("campoCndb");
+
+        tipoUsuario.addEventListener("change", function(){
+
+            if(this.value === "PROFESSOR")
+            {
+                campoCndb.style.display = "block";
+            }
+            else
+            {
+                campoCndb.style.display = "none";
+            }
+
+        });
+
+    </script>
+
+</body>
+</html>

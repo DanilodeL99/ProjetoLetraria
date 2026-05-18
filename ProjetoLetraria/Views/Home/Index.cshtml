@@ -1,96 +1,342 @@
-﻿<div class="top-bar">
-    <span>Compre livros novos, usados e seminovos</span>
-    <span>Central de ajuda</span>
-</div>
+﻿@model List<ProjetoLetraria.Models.Livro>
 
-<div class="navbar">
-    <div class="logo">ProjetoLiteraria</div>
+@{
+    ViewData["Title"] = "Letraria";
+}
 
-    <div class="search-box">
-        <input type="text" placeholder="O que você está procurando?">
-        <button>🔍</button>
-    </div>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
 
-    <div class="nav-links">
-        <a href="#">Categorias</a>
-        <a href="#">Livros</a>
-        <a href="#">Entrar</a>
-    </div>
-</div>
+    <title>Letraria</title>
 
-<div class="categories">
-    <span>Mais vendidos</span>
-    <span>Autores</span>
-    <span>Promoções</span>
-    <span>Biblioteca</span>
-</div>
+    <style>
 
-<div class="banner">
-    <div class="banner-content">
-        <h1>A VIDA ENTRE LIVROS</h1>
-        <p>Descubra suas próximas leituras</p>
-        <button>Explorar</button>
-    </div>
-</div>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial;
+        }
 
-<div class="section">
+        body {
+            background: #ebe4dc;
+        }
 
-    <div class="tabs">
-        <div class="tab">Dicas de Livros</div>
-        <div class="tab">Ofertas</div>
-        <div class="tab">Mais vendidos</div>
-    </div>
+        /* NAVBAR */
 
-    <h2 class="section-title">Livros Mais Vendidos</h2>
+        .navbar {
+            width: 100%;
+            height: 80px;
+            background: #0b7c80;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+        }
 
-    <div class="books">
+        .logo {
+            color: white;
+            font-size: 32px;
+            font-weight: bold;
+        }
 
-        <div class="book-card">
-            <img src="/images/livro1.jpg">
-            <div class="book-title">A morte de Ivan Ilitch</div>
-            <div class="book-author">Tolstói</div>
-            <div class="book-price">R$ 13,90</div>
+        .menu {
+            display: flex;
+            gap: 30px;
+        }
+
+            .menu a {
+                color: white;
+                text-decoration: none;
+                font-size: 16px;
+            }
+
+        .usuario {
+            color: white;
+            font-weight: bold;
+        }
+
+        /* HERO */
+
+        .hero {
+            width: 100%;
+            height: 300px;
+            background: url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=1600') center;
+            background-size: cover;
+        }
+
+        /* CONTAINER */
+
+        .container {
+            display: flex;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar {
+            width: 250px;
+            background: #0b7c80;
+            min-height: 100vh;
+            padding: 30px;
+        }
+
+            .sidebar h2 {
+                color: white;
+                margin-bottom: 20px;
+            }
+
+            .sidebar ul {
+                list-style: none;
+            }
+
+            .sidebar li {
+                margin-bottom: 15px;
+            }
+
+            .sidebar a {
+                color: white;
+                text-decoration: none;
+            }
+
+        /* CONTEÚDO */
+
+        .conteudo {
+            flex: 1;
+            padding: 40px;
+        }
+
+        .titulo-secao {
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        /* GRID LIVROS */
+
+        .grid-livros {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 30px;
+        }
+
+        .card-livro {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            transition: 0.3s;
+        }
+
+            .card-livro:hover {
+                transform: translateY(-5px);
+            }
+
+        .imagem-livro {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .info-livro {
+            padding: 20px;
+        }
+
+        .titulo-livro {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #222;
+        }
+
+        .autor {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .genero {
+            display: inline-block;
+            background: #0b7c80;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-bottom: 15px;
+        }
+
+        .preco {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .acoes {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-ler {
+            background: #0b7c80;
+            color: white;
+        }
+
+        .btn-comprar {
+            background: #222;
+            color: white;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+
+    <div class="navbar">
+
+        <div class="logo">
+            Letraria
         </div>
 
-        <div class="book-card">
-            <img src="/images/livro2.jpg">
-            <div class="book-title">Sociedade do Cansaço</div>
-            <div class="book-author">Byung-Chul Han</div>
-            <div class="book-price">R$ 31,48</div>
+        <div class="menu">
+
+            <a href="">Biblioteca</a>
+
+            <a href="">Catálogos</a>
+
+            <a href="">Mais Vendidos</a>
+
+            @if (ViewBag.TipoUsuario == "PROFESSOR")
+            {
+                <a href="">Criar Catálogo</a>
+            }
+
         </div>
 
-        <div class="book-card">
-            <img src="/images/livro3.jpg">
-            <div class="book-title">Gramática Francesa</div>
-            <div class="book-author">M. Grevisse</div>
-            <div class="book-price">R$ 39,90</div>
-        </div>
+        <div class="usuario">
 
-    </div>
+            Olá,
+            @ViewBag.Usuario
 
-    <h2 class="section-title" style="margin-top:60px;">Autores</h2>
+            |
+            <a asp-controller="Login"
+               asp-action="Logout"
+               style="color:white;">
+                Sair
+            </a>
 
-    <div class="authors">
-
-        <div class="author-card">
-            <img src="/images/autor1.jpg">
-            <p>Machado de Assis</p>
-        </div>
-
-        <div class="author-card">
-            <img src="/images/autor2.jpg">
-            <p>Clarice Lispector</p>
-        </div>
-
-        <div class="author-card">
-            <img src="/images/autor3.jpg">
-            <p>Virginia Woolf</p>
         </div>
 
     </div>
 
-</div>
+    <!-- HERO -->
 
-<div class="footer">
-    ProjetoLiteraria © 2025
-</div>
+    <div class="hero"></div>
+
+    <div class="container">
+
+        <!-- SIDEBAR -->
+
+        <div class="sidebar">
+
+            <h2>Categorias</h2>
+
+            <ul>
+
+                <li><a href="">Literatura Brasileira</a></li>
+
+                <li><a href="">Romance</a></li>
+
+                <li><a href="">Fantasia</a></li>
+
+                <li><a href="">Terror</a></li>
+
+                <li><a href="">Drama</a></li>
+
+                <li><a href="">Filosofia</a></li>
+
+                <li><a href="">Biografia</a></li>
+
+            </ul>
+
+        </div>
+
+        <!-- CONTEÚDO -->
+
+        <div class="conteudo">
+
+            <h1 class="titulo-secao">
+                Biblioteca Digital
+            </h1>
+
+            <div class="grid-livros">
+
+                @foreach (var livro in Model)
+                {
+                    <div class="card-livro">
+
+                        <img class="imagem-livro"
+                             src="@(string.IsNullOrEmpty(livro.ImagemCapa)
+                                                                 ? "https://via.placeholder.com/300x450"
+                                                                 : livro.ImagemCapa)"
+                         alt="Capa do livro" />
+
+                        <div class="info-livro">
+
+                            <h2 class="titulo-livro">
+                                @livro.Titulo
+                            </h2>
+
+                            <p class="autor">
+                                @livro.Autor
+                            </p>
+
+                            <span class="genero">
+                                @livro.Genero
+                            </span>
+
+                            <p class="preco">
+
+                            @if (livro.Preco != null)
+                                {
+                                    @:R$ @livro.Preco
+                                }
+                                else
+                                {
+                                    @:Gratuito
+                                }
+
+                            </p>
+
+                            <div class="acoes">
+
+                                <button class="btn btn-ler">
+                                    Ler
+                                </button>
+
+                                <button class="btn btn-comprar">
+                                    Comprar
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                }
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

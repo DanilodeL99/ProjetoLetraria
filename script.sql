@@ -92,3 +92,44 @@ CREATE TABLE redefinicao_senha (
     expiracao DATETIME NOT NULL,
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario)
 );
+
+INSERT INTO livros
+(
+titulo,
+autor,
+resumo,
+genero,
+imagem_capa,
+tipo_acesso,
+preco
+)
+VALUES
+(
+'Dom Casmurro',
+'Machado de Assis',
+'Um clássico da literatura brasileira.',
+'Literatura Brasileira',
+'https://m.media-amazon.com/images/I/71DMa1Qq1-L.jpg',
+'DIGITAL',
+29.90
+),
+
+(
+'1984',
+'George Orwell',
+'Distopia política clássica.',
+'Terror Psicológico',
+'https://m.media-amazon.com/images/I/61NAx5pd6XL.jpg',
+'COMPRA',
+39.90
+),
+
+(
+'O Hobbit',
+'J.R.R Tolkien',
+'Aventura fantástica na Terra Média.',
+'Fantasia',
+'https://m.media-amazon.com/images/I/91M9xPIf10L.jpg',
+'COMPRA',
+49.90
+);
