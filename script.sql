@@ -133,3 +133,45 @@ VALUES
 'COMPRA',
 49.90
 );
+
+ALTER TABLE usuarios
+MODIFY tipo_usuario ENUM('ADMIN', 'PROFESSOR', 'ALUNO') NOT NULL;
+
+INSERT INTO usuarios
+(nome, email, senha, tipo_usuario)
+VALUES
+(
+'Administrador',
+'admin@letraria.com',
+'123456',
+'ADMIN'
+);
+
+CREATE TABLE tags (
+    id_tag INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(80) NOT NULL UNIQUE
+);
+
+CREATE TABLE livro_tags (
+    id_livro INT NOT NULL,
+    id_tag INT NOT NULL,
+    PRIMARY KEY (id_livro, id_tag),
+    FOREIGN KEY (id_livro) REFERENCES livros(id_livro),
+    FOREIGN KEY (id_tag) REFERENCES tags(id_tag)
+);
+
+INSERT INTO tags (nome) VALUES
+('Literatura Brasileira'),
+('Romance'),
+('Fantasia'),
+('Terror'),
+('Drama'),
+('Filosofia'),
+('Biografia'),
+('Suspense'),
+('Aventura'),
+('Clássico');
+
+ALTER TABLE usuarios
+ADD COLUMN nome_exibicao VARCHAR(100) NULL,
+ADD COLUMN foto_perfil VARCHAR(255) NULL;

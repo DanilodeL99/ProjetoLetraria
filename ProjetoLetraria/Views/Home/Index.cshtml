@@ -1,342 +1,68 @@
 ﻿@model List<ProjetoLetraria.Models.Livro>
-
 @{
-    ViewData["Title"] = "Letraria";
+    ViewData["Title"] = "Início";
 }
 
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="utf-8" />
+<div class="row g-4">
+    <aside class="col-12 col-lg-3">
+        <div class="card card-letraria p-3">
+            <h4 class="fw-bold mb-3 text-letraria">Categorias</h4>
+            <div class="sidebar-categorias">
+                <a href="#">Literatura Brasileira</a>
+                <a href="#">Romance</a>
+                <a href="#">Fantasia</a>
+                <a href="#">Terror</a>
+                <a href="#">Drama</a>
+                <a href="#">Filosofia</a>
+                <a href="#">Biografia</a>
+            </div>
+        </div>
+    </aside>
 
-    <title>Letraria</title>
-
-    <style>
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial;
-        }
-
-        body {
-            background: #ebe4dc;
-        }
-
-        /* NAVBAR */
-
-        .navbar {
-            width: 100%;
-            height: 80px;
-            background: #0b7c80;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 40px;
-        }
-
-        .logo {
-            color: white;
-            font-size: 32px;
-            font-weight: bold;
-        }
-
-        .menu {
-            display: flex;
-            gap: 30px;
-        }
-
-            .menu a {
-                color: white;
-                text-decoration: none;
-                font-size: 16px;
-            }
-
-        .usuario {
-            color: white;
-            font-weight: bold;
-        }
-
-        /* HERO */
-
-        .hero {
-            width: 100%;
-            height: 300px;
-            background: url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=1600') center;
-            background-size: cover;
-        }
-
-        /* CONTAINER */
-
-        .container {
-            display: flex;
-        }
-
-        /* SIDEBAR */
-
-        .sidebar {
-            width: 250px;
-            background: #0b7c80;
-            min-height: 100vh;
-            padding: 30px;
-        }
-
-            .sidebar h2 {
-                color: white;
-                margin-bottom: 20px;
-            }
-
-            .sidebar ul {
-                list-style: none;
-            }
-
-            .sidebar li {
-                margin-bottom: 15px;
-            }
-
-            .sidebar a {
-                color: white;
-                text-decoration: none;
-            }
-
-        /* CONTEÚDO */
-
-        .conteudo {
-            flex: 1;
-            padding: 40px;
-        }
-
-        .titulo-secao {
-            margin-bottom: 30px;
-            color: #333;
-        }
-
-        /* GRID LIVROS */
-
-        .grid-livros {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 30px;
-        }
-
-        .card-livro {
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            transition: 0.3s;
-        }
-
-            .card-livro:hover {
-                transform: translateY(-5px);
-            }
-
-        .imagem-livro {
-            width: 100%;
-            height: 300px;
-            object-fit: cover;
-        }
-
-        .info-livro {
-            padding: 20px;
-        }
-
-        .titulo-livro {
-            font-size: 20px;
-            margin-bottom: 10px;
-            color: #222;
-        }
-
-        .autor {
-            color: #666;
-            margin-bottom: 10px;
-        }
-
-        .genero {
-            display: inline-block;
-            background: #0b7c80;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-            margin-bottom: 15px;
-        }
-
-        .preco {
-            font-weight: bold;
-            font-size: 18px;
-            margin-bottom: 15px;
-        }
-
-        .acoes {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn {
-            flex: 1;
-            padding: 10px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .btn-ler {
-            background: #0b7c80;
-            color: white;
-        }
-
-        .btn-comprar {
-            background: #222;
-            color: white;
-        }
-
-    </style>
-</head>
-<body>
-
-    <!-- NAVBAR -->
-
-    <div class="navbar">
-
-        <div class="logo">
-            Letraria
+    <section class="col-12 col-lg-9">
+        <div class="card card-letraria p-4 mb-4">
+            <h1 class="fw-bold mb-1">Biblioteca Digital</h1>
+            <p class="text-muted mb-0">Indicações, leitura e avaliações em um só lugar.</p>
         </div>
 
-        <div class="menu">
-
-            <a href="">Biblioteca</a>
-
-            <a href="">Catálogos</a>
-
-            <a href="">Mais Vendidos</a>
-
-            @if (ViewBag.TipoUsuario == "PROFESSOR")
+        <div class="row g-4">
+            @if (Model != null && Model.Any())
             {
-                <a href="">Criar Catálogo</a>
-            }
-
-        </div>
-
-        <div class="usuario">
-
-            Olá,
-            @ViewBag.Usuario
-
-            |
-            <a asp-controller="Login"
-               asp-action="Logout"
-               style="color:white;">
-                Sair
-            </a>
-
-        </div>
-
-    </div>
-
-    <!-- HERO -->
-
-    <div class="hero"></div>
-
-    <div class="container">
-
-        <!-- SIDEBAR -->
-
-        <div class="sidebar">
-
-            <h2>Categorias</h2>
-
-            <ul>
-
-                <li><a href="">Literatura Brasileira</a></li>
-
-                <li><a href="">Romance</a></li>
-
-                <li><a href="">Fantasia</a></li>
-
-                <li><a href="">Terror</a></li>
-
-                <li><a href="">Drama</a></li>
-
-                <li><a href="">Filosofia</a></li>
-
-                <li><a href="">Biografia</a></li>
-
-            </ul>
-
-        </div>
-
-        <!-- CONTEÚDO -->
-
-        <div class="conteudo">
-
-            <h1 class="titulo-secao">
-                Biblioteca Digital
-            </h1>
-
-            <div class="grid-livros">
-
-                @foreach (var livro in Model)
+                foreach (var livro in Model)
                 {
-                    <div class="card-livro">
+                    <div class="col-12 col-md-6 col-xl-4">
+                        <div class="card card-letraria h-100 overflow-hidden">
+                            <img class="cover-book"
+                                 src="@(string.IsNullOrWhiteSpace(livro.ImagemCapa) ? "/imagens/capa-padrao.jpg" : livro.ImagemCapa)"
+                                 alt="Capa de @livro.Titulo" />
 
-                        <img class="imagem-livro"
-                             src="@(string.IsNullOrEmpty(livro.ImagemCapa)
-                                                                 ? "https://via.placeholder.com/300x450"
-                                                                 : livro.ImagemCapa)"
-                         alt="Capa do livro" />
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="fw-bold mb-1">@livro.Titulo</h5>
+                                <p class="text-muted mb-2">@livro.Autor</p>
 
-                        <div class="info-livro">
+                                <span class="badge badge-letraria mb-3 align-self-start">@livro.Genero</span>
 
-                            <h2 class="titulo-livro">
-                                @livro.Titulo
-                            </h2>
+                                <p class="fw-semibold mb-3">
+                                    @(livro.Preco.HasValue ? $"R$ {livro.Preco:0.00}" : "Gratuito")
+                                </p>
 
-                            <p class="autor">
-                                @livro.Autor
-                            </p>
-
-                            <span class="genero">
-                                @livro.Genero
-                            </span>
-
-                            <p class="preco">
-
-                            @if (livro.Preco != null)
-                                {
-                                    @:R$ @livro.Preco
-                                }
-                                else
-                                {
-                                    @:Gratuito
-                                }
-
-                            </p>
-
-                            <div class="acoes">
-
-                                <button class="btn btn-ler">
-                                    Ler
-                                </button>
-
-                                <button class="btn btn-comprar">
-                                    Comprar
-                                </button>
-
+                                <div class="mt-auto d-flex gap-2">
+                                    <a href="#" class="btn btn-letraria flex-grow-1">Ler</a>
+                                    <a href="#" class="btn btn-outline-dark flex-grow-1">Comprar</a>
+                                </div>
                             </div>
-
                         </div>
-
                     </div>
                 }
-
-            </div>
-
+            }
+            else
+            {
+                <div class="col-12">
+                    <div class="alert alert-warning card-letraria border-0">
+                        Nenhum livro cadastrado ainda.
+                    </div>
+                </div>
+            }
         </div>
-
-    </div>
-
-</body>
-</html>
+    </section>
+</div>

@@ -2,17 +2,17 @@
 
 namespace ProjetoLetraria.Models
 {
-    [Table("catalogo_livros")]
-    public class CatalogoLivro
+    [Table("livro_tags")]
+    public class LivroTag
     {
-        [Column("id_catalogo")]
-        public int IdCatalogo { get; set; }
-
         [Column("id_livro")]
         public int IdLivro { get; set; }
 
-        public Catalogo? Catalogo { get; set; }
+        [Column("id_tag")]
+        public int IdTag { get; set; }
 
         public Livro? Livro { get; set; }
+
+        public Tag? Tag { get; set; }
     }
 }

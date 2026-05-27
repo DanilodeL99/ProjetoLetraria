@@ -1,0 +1,58 @@
+:root {
+    --letraria: #0b7c80;
+    --letraria-escuro: #075d60;
+    --fundo: #e9e1d8;
+    --card: #ffffff;
+    --texto: #24333a;
+}
+
+body.bg-letraria {
+    background: var(--fundo);
+    color: var(--texto);
+}
+
+.navbar-letraria {
+    background: var(--letraria);
+    box-shadow: 0 8px 20px rgba(0,0,0,.12);
+}
+
+.card-letraria {
+    background: var(--card);
+    border: none;
+    border-radius: 1.25rem;
+    box-shadow: 0 10px 28px rgba(0,0,0,.10);
+}
+
+.btn-letraria {
+    background: var(--letraria);
+    color: white;
+    border: none;
+}
+
+    .btn-letraria:hover {
+        background: var(--letraria-escuro);
+        color: white;
+    }
+
+.badge-letraria {
+    background: var(--letraria);
+}
+
+.cover-book {
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+}
+
+.sidebar-categorias a {
+    text-decoration: none;
+    color: var(--texto);
+    display: block;
+    padding: .55rem .75rem;
+    border-radius: .75rem;
+}
+
+    .sidebar-categorias a:hover {
+        background: rgba(11,124,128,.10);
+        color: var(--letraria);
+    }

@@ -1,0 +1,55 @@
+﻿@model ProjetoLetraria.Models.Livro
+
+<h1>Editar Livro</h1>
+
+<form asp-action="EditarLivro" method="post">
+
+    <input type="hidden" asp-for="IdLivro" />
+
+    <div>
+        <label>Título</label>
+        <input asp-for="Titulo" />
+    </div>
+
+    <br />
+
+    <div>
+        <label>Autor</label>
+        <input asp-for="Autor" />
+    </div>
+
+    <br />
+
+    <div>
+        <label>Resumo</label>
+        <textarea asp-for="Resumo"></textarea>
+    </div>
+
+    <br />
+
+    <div>
+        <label>Gênero</label>
+        <input asp-for="Genero" />
+    </div>
+
+    <br />
+
+    <div>
+        <label>Imagem</label>
+        <input asp-for="ImagemCapa" />
+    </div>
+
+    <br />
+
+    <div>
+        <label>Preço</label>
+        <input asp-for="Preco" />
+    </div>
+
+    <br />
+
+    <button type="submit">
+        Atualizar
+    </button>
+
+</form>

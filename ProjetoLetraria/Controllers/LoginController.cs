@@ -15,9 +15,6 @@ namespace ProjetoLetraria.Controllers
             _context = context;
         }
 
-        // =========================
-        // LOGIN
-        // =========================
 
         [HttpGet]
         public IActionResult Index()
@@ -51,9 +48,6 @@ namespace ProjetoLetraria.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        // =========================
-        // CADASTRO
-        // =========================
 
         [HttpGet]
         public IActionResult Cadastro()
@@ -106,9 +100,6 @@ namespace ProjetoLetraria.Controllers
             return RedirectToAction("Index");
         }
 
-        // =========================
-        // LOGOUT
-        // =========================
 
         public IActionResult Logout()
         {

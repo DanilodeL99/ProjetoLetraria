@@ -28,7 +28,7 @@ namespace ProjetoLetraria.Models
 
         [Required(ErrorMessage = "O tipo de usuário é obrigatório.")]
         [Column("tipo_usuario")]
-        public string TipoUsuario { get; set; } = string.Empty; // PROFESSOR ou ALUNO
+        public string TipoUsuario { get; set; } = string.Empty; 
 
         [StringLength(50)]
         [Column("cndb")]
@@ -36,5 +36,13 @@ namespace ProjetoLetraria.Models
 
         [Column("data_criacao")]
         public DateTime DataCriacao { get; set; }
+
+        [StringLength(100)]
+        [Column("nome_exibicao")]
+        public string? NomeExibicao { get; set; }
+
+        [StringLength(255)]
+        [Column("foto_perfil")]
+        public string? FotoPerfil { get; set; }
     }
 }
