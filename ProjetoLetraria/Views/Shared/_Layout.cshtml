@@ -1,64 +1,123 @@
-﻿@using Microsoft.AspNetCore.Http
+﻿@* Views/Shared/_Layout.cshtml *@
+@using Microsoft.AspNetCore.Http
 @{
     var nomeUsuario = Context.Session.GetString("UsuarioNome");
     var tipoUsuario = Context.Session.GetString("TipoUsuario");
     var fotoPerfil = Context.Session.GetString("FotoPerfil");
     var fotoMostrada = string.IsNullOrWhiteSpace(fotoPerfil) ? "/imagens/usuario-padrao.png" : fotoPerfil;
+    var tema = Context.Request.Cookies["tema"] ?? "dark";
+    var bodyClass = tema == "light" ? "theme-light" : "theme-dark";
 }
 
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Letraria</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Letraria</title>
 
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 </head>
-<body class="bg-letraria">
+<body class="@bodyClass">
 
-    <nav class="navbar navbar-expand-lg navbar-dark navbar-letraria px-3 px-lg-4">
-        <a class="navbar-brand fw-bold fs-3 text-white" asp-controller="Home" asp-action="Index">Letraria</a>
+    <div class="layout-twitter">
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuTop">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+        <aside class="sidebar">
+            <div class="sidebar-top">
+                <a asp-controller="Home" asp-action="Index" class="brand-link">
+                    <img src="~/imagens/logo-letraria.jpeg" alt="Letraria" class="brand-logo" />
+                    <span class="brand-text">LETRARIA</span>
+                </a>
 
-        <div class="collapse navbar-collapse" id="menuTop">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-lg-2">
-                <li class="nav-item">
-                    <a class="nav-link text-white" asp-controller="Home" asp-action="Index">Biblioteca</a>
-                </li>
+                <nav class="menu-lateral">
+                    <a asp-controller="Home" asp-action="Index">
+                        <i class="fa-solid fa-house"></i>
+                        <span>Início</span>
+                    </a>
 
-                @if (tipoUsuario == "ADMIN")
-                {
-                    <li class="nav-item">
-                        <a class="nav-link text-white" asp-controller="Admin" asp-action="Livros">Painel Admin</a>
-                    </li>
-                }
+                    <a asp-controller="Pesquisa" asp-action="Index">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <span>Pesquisar</span>
+                    </a>
 
-                <li class="nav-item">
-                    <a class="nav-link text-white" asp-controller="Perfil" asp-action="Editar">Minha conta</a>
-                </li>
-            </ul>
+                    <a asp-controller="Loja" asp-action="Index">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        <span>Loja</span>
+                    </a>
 
-            @if (!string.IsNullOrWhiteSpace(nomeUsuario))
-            {
-                <div class="d-flex align-items-center gap-2 text-white">
-                    <img src="@fotoMostrada" class="rounded-circle border border-2 border-white" style="width:38px;height:38px;object-fit:cover;" />
-                    <span class="fw-semibold">@nomeUsuario</span>
-                    <a class="text-white ms-2" asp-controller="Login" asp-action="Logout">Sair</a>
+                    <a asp-controller="Carrinho" asp-action="Index">
+                        <i class="fa-solid fa-basket-shopping"></i>
+                        <span>Carrinho</span>
+                    </a>
+
+                    <a asp-controller="Biblioteca" asp-action="Index">
+                        <i class="fa-solid fa-book-open"></i>
+                        <span>Biblioteca</span>
+                    </a>
+
+                    @if (tipoUsuario == "ADMIN")
+                    {
+                        <a asp-controller="Admin" asp-action="Livros">
+                            <i class="fa-solid fa-shield"></i>
+                            <span>Painel Admin</span>
+                        </a>
+                    }
+                </nav>
+            </div>
+
+            <div class="sidebar-bottom">
+                <div class="perfil-dropdown">
+                    <button class="perfil-botao" type="button" onclick="toggleMenu()">
+                        <img src="@fotoMostrada" class="foto-sidebar" />
+                        <div class="perfil-texto">
+                            <strong>@(nomeUsuario ?? "Usuário")</strong>
+                            <small>@(tipoUsuario ?? "")</small>
+                        </div>
+                        <i class="fa-solid fa-chevron-up"></i>
+                    </button>
+
+                    <div id="menuPerfil" class="menu-perfil">
+                        <a asp-controller="Perfil" asp-action="Editar">
+                            <i class="fa-solid fa-user"></i> Minha Conta
+                        </a>
+                        <a asp-controller="Sistema" asp-action="Configuracoes">
+                            <i class="fa-solid fa-gear"></i> Configurações
+                        </a>
+                        <a asp-controller="Login" asp-action="Logout">
+                            <i class="fa-solid fa-right-from-bracket"></i> Sair
+                        </a>
+                    </div>
                 </div>
+            </div>
+        </aside>
+
+        <main class="conteudo">
+            @RenderBody()
+        </main>
+
+        <aside class="sidebar-direita">
+            <div class="card-lateral">
+                <h3>Sobre a Letraria</h3>
+                <p>Descubra, avalie e compartilhe livros com sua comunidade.</p>
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        function toggleMenu() {
+            document.getElementById("menuPerfil").classList.toggle("mostrar");
+        }
+
+        window.onclick = function (event) {
+            if (!event.target.closest('.perfil-dropdown')) {
+                const menu = document.getElementById("menuPerfil");
+                if (menu) menu.classList.remove("mostrar");
             }
-        </div>
-    </nav>
+        }
+    </script>
 
-    <main class="container-fluid py-4">
-        @RenderBody()
-    </main>
-
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

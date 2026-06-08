@@ -1,0 +1,50 @@
+﻿@model List<ProjetoLetraria.Models.Postagem>
+
+<div class="tweet-box">
+
+    <form asp-action="Publicar" method="post">
+
+        <textarea name="texto"
+                  placeholder="O que você achou do último livro?"
+                  required>
+        </textarea>
+
+        <button type="submit">
+            Publicar
+        </button>
+
+    </form>
+
+</div>
+
+@foreach (var post in Model)
+{
+    <div class="postagem">
+
+        <div class="post-header">
+
+            <strong>
+                @(post.Usuario?.NomeExibicao ?? post.Usuario?.Nome)
+            </strong>
+
+        </div>
+
+        @if (post.Livro != null)
+        {
+            <div class="livro-referenciado">
+
+                📖 @post.Livro.Titulo
+
+            </div>
+        }
+
+        <p>
+            @post.Texto
+        </p>
+
+        <small>
+            @post.DataPostagem.ToString("dd/MM/yyyy HH:mm")
+        </small>
+
+    </div>
+}

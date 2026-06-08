@@ -1,0 +1,60 @@
+﻿@* ===== Views/Carrinho/Comprar.cshtml ===== *@
+@model List<ProjetoLetraria.ViewModels.CarrinhoItemViewModel>
+@{
+    ViewData["Title"] = "Comprar";
+    var total = ViewBag.Total ?? 0m;
+}
+
+<div class="row g-4">
+    <div class="col-12 col-xl-8">
+        <div class="card card-letraria p-4">
+            <h2 class="fw-bold mb-4">Finalizar compra</h2>
+
+            @foreach (var item in Model)
+            {
+                <div class="d-flex gap-3 align-items-center border-bottom py-3">
+                    <img src="@(string.IsNullOrWhiteSpace(item.ImagemCapa) ? "/imagens/capa-padrao.jpg" : item.ImagemCapa)"
+                         class="cart-item-img" />
+
+                    <div class="flex-grow-1">
+                        <h5 class="mb-1">@item.Titulo</h5>
+                        <p class="mb-1 text-muted">@item.Autor</p>
+                        <strong>R$ @item.Preco.ToString("0.00")</strong>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="col-12 col-xl-4">
+        <div class="card card-letraria p-4">
+            <h4 class="fw-bold mb-3">Pagamento</h4>
+
+            <div class="mb-3">
+                <label class="form-label">Método de pagamento</label>
+                <select id="metodoPagamento" class="form-select">
+                    <option value="CARTAO">Cartão</option>
+                    <option value="PIX">PIX</option>
+                </select>
+            </div>
+
+            <div class="border rounded-3 p-3 mb-3 bg-light">
+                <small class="text-muted d-block">Total</small>
+                <h3 class="mb-0">R$ @(((decimal)total).ToString("0.00"))</h3>
+            </div>
+
+            <form asp-action="FinalizarCompra" method="post">
+                <input type="hidden" name="metodoPagamento" id="metodoPagamentoHidden" value="CARTAO" />
+                <button type="submit" class="btn btn-letraria w-100">Confirmar compra</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const select = document.getElementById('metodoPagamento');
+        const hidden = document.getElementById('metodoPagamentoHidden');
+        select.addEventListener('change', () => hidden.value = select.value);
+    </script>
+}

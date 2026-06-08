@@ -1,0 +1,41 @@
+﻿@* Views/Carrinho/Index.cshtml *@
+@model List<ProjetoLetraria.Models.CarrinhoItem>
+@{
+    ViewData["Title"] = "Carrinho";
+    decimal total = 0m;
+}
+
+<div class="cart-page">
+    <div class="cart-header">
+        <h1>Carrinho</h1>
+        <a asp-controller="Compra" asp-action="Finalizar" class="btn-twitter">Finalizar compra</a>
+    </div>
+
+    <div class="cart-grid">
+        <div class="cart-list">
+            @foreach (var item in Model)
+            {
+                var preco = item.Livro?.Preco ?? 0m;
+                total += preco * item.Quantidade;
+
+                <article class="cart-card">
+                    <img src="@(string.IsNullOrWhiteSpace(item.Livro?.ImagemCapa) ? "/imagens/capa-padrao.jpg" : item.Livro!.ImagemCapa)"
+                         class="cart-cover" />
+                    <div class="cart-info">
+                        <h3>@item.Livro?.Titulo</h3>
+                        <p class="muted">@item.Livro?.Autor</p>
+                        <p>Qtd: @item.Quantidade</p>
+                        <p><strong>R$ @(preco.ToString("0.00"))</strong></p>
+                        <a asp-action="Remover" asp-route-id="@item.IdCarrinho">Remover</a>
+                    </div>
+                </article>
+            }
+        </div>
+
+        <aside class="cart-summary">
+            <h3>Resumo</h3>
+            <p>Total: <strong>R$ @total.ToString("0.00")</strong></p>
+            <a asp-controller="Compra" asp-action="Finalizar" class="btn-twitter full-width">Ir para pagamento</a>
+        </aside>
+    </div>
+</div>

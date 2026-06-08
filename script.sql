@@ -93,6 +93,35 @@ CREATE TABLE redefinicao_senha (
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario)
 );
 
+CREATE TABLE carrinho (
+    id_carrinho INT PRIMARY KEY AUTO_INCREMENT,
+    id_usuario INT NOT NULL,
+    id_livro INT NOT NULL,
+    quantidade INT DEFAULT 1
+);
+
+CREATE TABLE curtidas(
+    id_curtida INT PRIMARY KEY AUTO_INCREMENT,
+    id_usuario INT,
+    id_avaliacao INT
+);
+
+CREATE TABLE comentarios(
+    id_comentario INT PRIMARY KEY AUTO_INCREMENT,
+    id_usuario INT,
+    id_avaliacao INT,
+    texto TEXT
+);
+
+CREATE TABLE comentarios_avaliacao
+(
+    id_comentario INT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario INT NOT NULL,
+    id_avaliacao INT NOT NULL,
+    texto TEXT NOT NULL,
+    data_comentario DATETIME NOT NULL
+);
+
 INSERT INTO livros
 (
 titulo,

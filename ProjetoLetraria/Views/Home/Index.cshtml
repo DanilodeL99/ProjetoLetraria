@@ -1,68 +1,113 @@
-﻿@model List<ProjetoLetraria.Models.Livro>
-@{
-    ViewData["Title"] = "Início";
-}
+﻿@* Views/Home/Index.cshtml *@
+@model ProjetoLetraria.ViewModels.HomeViewModel
 
-<div class="row g-4">
-    <aside class="col-12 col-lg-3">
-        <div class="card card-letraria p-3">
-            <h4 class="fw-bold mb-3 text-letraria">Categorias</h4>
-            <div class="sidebar-categorias">
-                <a href="#">Literatura Brasileira</a>
-                <a href="#">Romance</a>
-                <a href="#">Fantasia</a>
-                <a href="#">Terror</a>
-                <a href="#">Drama</a>
-                <a href="#">Filosofia</a>
-                <a href="#">Biografia</a>
+<div class="page-home">
+    <section class="feed-center">
+        <div class="card-composer">
+            <div class="composer-header">
+                <h2>Início</h2>
+                <p>Publique sua opinião sobre livros, obras e leituras.</p>
             </div>
-        </div>
-    </aside>
 
-    <section class="col-12 col-lg-9">
-        <div class="card card-letraria p-4 mb-4">
-            <h1 class="fw-bold mb-1">Biblioteca Digital</h1>
-            <p class="text-muted mb-0">Indicações, leitura e avaliações em um só lugar.</p>
+            <form asp-action="PublicarAvaliacao" method="post" class="composer-form">
+                @Html.AntiForgeryToken()
+
+                <div class="form-row">
+                    <label>Livro / obra</label>
+                    <select asp-for="LivroSelecionadoId" class="form-control">
+                        <option value="">Selecione um livro</option>
+                        @foreach (var livro in Model.LivrosRecentes)
+                        {
+                            <option value="@livro.IdLivro">@livro.Titulo</option>
+                        }
+                    </select>
+                    <span asp-validation-for="LivroSelecionadoId" class="text-danger"></span>
+                </div>
+
+                <div class="form-row">
+                    <label>Nota</label>
+                    <select asp-for="NotaNova" class="form-control">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                    <span asp-validation-for="NotaNova" class="text-danger"></span>
+                </div>
+
+                <div class="form-row">
+                    <label>Sua opinião</label>
+                    <textarea asp-for="ComentarioNovo" rows="4" class="form-control" placeholder="O que você achou da obra?"></textarea>
+                    <span asp-validation-for="ComentarioNovo" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn-twitter">Publicar</button>
+            </form>
         </div>
 
-        <div class="row g-4">
-            @if (Model != null && Model.Any())
+        <div class="feed-list">
+            @foreach (var post in Model.AvaliacoesRecentes)
             {
-                foreach (var livro in Model)
-                {
-                    <div class="col-12 col-md-6 col-xl-4">
-                        <div class="card card-letraria h-100 overflow-hidden">
-                            <img class="cover-book"
-                                 src="@(string.IsNullOrWhiteSpace(livro.ImagemCapa) ? "/imagens/capa-padrao.jpg" : livro.ImagemCapa)"
-                                 alt="Capa de @livro.Titulo" />
+                <article class="post-card">
+                    <div class="post-head">
+                        <img src="@(string.IsNullOrWhiteSpace(post.Usuario?.FotoPerfil) ? "/imagens/usuario-padrao.png" : post.Usuario!.FotoPerfil)"
+                             class="avatar-post" />
 
-                            <div class="card-body d-flex flex-column">
-                                <h5 class="fw-bold mb-1">@livro.Titulo</h5>
-                                <p class="text-muted mb-2">@livro.Autor</p>
-
-                                <span class="badge badge-letraria mb-3 align-self-start">@livro.Genero</span>
-
-                                <p class="fw-semibold mb-3">
-                                    @(livro.Preco.HasValue ? $"R$ {livro.Preco:0.00}" : "Gratuito")
-                                </p>
-
-                                <div class="mt-auto d-flex gap-2">
-                                    <a href="#" class="btn btn-letraria flex-grow-1">Ler</a>
-                                    <a href="#" class="btn btn-outline-dark flex-grow-1">Comprar</a>
-                                </div>
-                            </div>
+                        <div>
+                            <strong>@(post.Usuario?.NomeExibicao ?? post.Usuario?.Nome)</strong>
+                            <div class="muted">@post.DataAvaliacao.ToString("dd/MM/yyyy HH:mm")</div>
                         </div>
                     </div>
-                }
-            }
-            else
-            {
-                <div class="col-12">
-                    <div class="alert alert-warning card-letraria border-0">
-                        Nenhum livro cadastrado ainda.
+
+                    <h3 class="post-book">@post.Livro?.Titulo</h3>
+                    <div class="post-rating">Nota: @post.Nota / 5</div>
+                    <p class="post-text">@post.Comentario</p>
+
+                    <div class="acoes-post">
+                        <span>❤️ @post.Curtidas.Count</span>
+                        <span>💬 @post.Comentarios.Count</span>
                     </div>
-                </div>
+
+                    <div class="comentarios-feed">
+                        @foreach (var comentario in post.Comentarios.OrderByDescending(c => c.DataComentario).Take(3))
+                        {
+                            <div class="comentario-feed">
+                                <strong>@(comentario.Usuario?.NomeExibicao ?? comentario.Usuario?.Nome)</strong>
+                                <p>@comentario.Texto</p>
+                            </div>
+                        }
+                    </div>
+
+                    <form asp-controller="Feed" asp-action="Comentar" method="post" class="form-comentario">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="avaliacaoId" value="@post.IdAvaliacao" />
+                        <input type="text" name="texto" placeholder="Responder..." class="form-control" />
+                        <button type="submit" class="btn-twitter">Enviar</button>
+                    </form>
+                </article>
             }
         </div>
     </section>
+
+
+        <div class="panel-card">
+            <h3>Livros em destaque</h3>
+
+            @foreach (var livro in Model.LivrosRecentes.Take(6))
+            {
+                <a asp-controller="Loja" asp-action="Index" class="spot-book">
+                    <img src="@(string.IsNullOrWhiteSpace(livro.ImagemCapa) ? "/imagens/capa-padrao.jpg" : livro.ImagemCapa)"
+                         class="spot-cover" />
+                    <div>
+                        <strong>@livro.Titulo</strong>
+                        <div class="muted">@livro.Autor</div>
+                    </div>
+                </a>
+            }
+        </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

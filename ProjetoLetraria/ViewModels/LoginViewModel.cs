@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿// ===== ViewModels/LoginViewModel.cs =====
+using System.ComponentModel.DataAnnotations;
 
 namespace ProjetoLetraria.ViewModels
 {

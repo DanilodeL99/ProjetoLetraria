@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿// Controllers/PerfilController.cs
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjetoLetraria.Data;
-using ProjetoLetraria.Models;
 using ProjetoLetraria.ViewModels;
 
 namespace ProjetoLetraria.Controllers
@@ -25,11 +25,11 @@ namespace ProjetoLetraria.Controllers
         [HttpGet]
         public async Task<IActionResult> Editar()
         {
-            var id = ObterIdUsuario();
-            if (id == null)
+            var idUsuario = ObterIdUsuario();
+            if (idUsuario == null)
                 return RedirectToAction("Index", "Login");
 
-            var usuario = await _context.Usuarios.FindAsync(id.Value);
+            var usuario = await _context.Usuarios.FirstOrDefaultAsync(x => x.IdUsuario == idUsuario.Value);
             if (usuario == null)
                 return RedirectToAction("Index", "Login");
 
@@ -47,11 +47,11 @@ namespace ProjetoLetraria.Controllers
         [HttpPost]
         public async Task<IActionResult> Editar(EditarPerfilViewModel model)
         {
-            var id = ObterIdUsuario();
-            if (id == null)
+            var idUsuario = ObterIdUsuario();
+            if (idUsuario == null)
                 return RedirectToAction("Index", "Login");
 
-            var usuario = await _context.Usuarios.FindAsync(id.Value);
+            var usuario = await _context.Usuarios.FirstOrDefaultAsync(x => x.IdUsuario == idUsuario.Value);
             if (usuario == null)
                 return RedirectToAction("Index", "Login");
 
@@ -61,10 +61,10 @@ namespace ProjetoLetraria.Controllers
                 return View(model);
             }
 
-            var emailJaExiste = await _context.Usuarios
-                .AnyAsync(u => u.Email == model.Email && u.IdUsuario != id.Value);
+            var emailExiste = await _context.Usuarios
+                .AnyAsync(x => x.Email == model.Email && x.IdUsuario != idUsuario.Value);
 
-            if (emailJaExiste)
+            if (emailExiste)
             {
                 ModelState.AddModelError("Email", "Esse e-mail já está em uso.");
                 model.FotoAtual = usuario.FotoPerfil;
@@ -81,12 +81,10 @@ namespace ProjetoLetraria.Controllers
                 Directory.CreateDirectory(pasta);
 
                 var nomeArquivo = $"{Guid.NewGuid()}{Path.GetExtension(model.FotoArquivo.FileName)}";
-                var caminhoFisico = Path.Combine(pasta, nomeArquivo);
+                var caminho = Path.Combine(pasta, nomeArquivo);
 
-                using (var stream = new FileStream(caminhoFisico, FileMode.Create))
-                {
-                    await model.FotoArquivo.CopyToAsync(stream);
-                }
+                using var stream = new FileStream(caminho, FileMode.Create);
+                await model.FotoArquivo.CopyToAsync(stream);
 
                 usuario.FotoPerfil = $"/uploads/perfis/{nomeArquivo}";
             }

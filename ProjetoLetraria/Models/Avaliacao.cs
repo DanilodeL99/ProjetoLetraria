@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿// Models/Avaliacao.cs
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProjetoLetraria.Models
@@ -28,10 +29,12 @@ namespace ProjetoLetraria.Models
         [Column("data_avaliacao")]
         public DateTime DataAvaliacao { get; set; }
 
-        [ForeignKey("IdUsuario")]
         public Usuario? Usuario { get; set; }
 
-        [ForeignKey("IdLivro")]
         public Livro? Livro { get; set; }
+
+        public ICollection<Curtida> Curtidas { get; set; } = new List<Curtida>();
+
+        public ICollection<ComentarioAvaliacao> Comentarios { get; set; } = new List<ComentarioAvaliacao>();
     }
 }

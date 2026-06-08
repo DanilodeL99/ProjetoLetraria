@@ -1,0 +1,45 @@
+﻿@* Views/Compra/Finalizar.cshtml *@
+@model List<ProjetoLetraria.Models.CarrinhoItem>
+
+<h1>Finalizar Compra</h1>
+
+@{
+    decimal total = 0;
+}
+
+@if (Model != null && Model.Any())
+{
+    foreach (var item in Model)
+    {
+        total += (item.Livro?.Preco ?? 0) * item.Quantidade;
+
+        <div class="produto-finalizar">
+            <h3>@item.Livro?.Titulo</h3>
+            <p>@item.Livro?.Autor</p>
+            <p>R$ @((item.Livro?.Preco ?? 0).ToString("0.00"))</p>
+        </div>
+    }
+
+    <hr />
+
+    <h2>Total: R$ @total.ToString("0.00")</h2>
+
+    <form asp-action="ConfirmarCompra" method="post">
+        <h3>Forma de pagamento</h3>
+
+        <select name="metodoPagamento">
+            <option value="PIX">PIX</option>
+            <option value="CARTAO">Cartão</option>
+        </select>
+
+        <br />
+        <br />
+
+        <button type="submit">Confirmar Compra</button>
+    </form>
+}
+else
+{
+    <p>Seu carrinho está vazio.</p>
+    <a asp-controller="Loja" asp-action="Index">Voltar para a loja</a>
+}

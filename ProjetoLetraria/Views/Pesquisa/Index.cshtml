@@ -1,0 +1,74 @@
+﻿@* Views/Pesquisa/Index.cshtml *@
+@model ProjetoLetraria.ViewModels.PesquisaViewModel
+
+<div class="search-page">
+    <div class="search-top card-panel">
+        <h1>Pesquisar</h1>
+
+        <form asp-action="Index" method="get" class="search-form">
+            <input type="text" name="termo" value="@Model.Termo" placeholder="Pesquise livro, autor, comentário ou tema..." class="search-input" />
+            <button type="submit" class="btn-twitter">Buscar</button>
+        </form>
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(Model.Termo))
+    {
+        <div class="search-results">
+            <section class="result-group">
+                <h2>Livros</h2>
+
+                @if (Model.Livros.Any())
+                {
+                    foreach (var livro in Model.Livros)
+                    {
+                        <article class="result-card">
+                            <img src="@(string.IsNullOrWhiteSpace(livro.ImagemCapa) ? "/imagens/capa-padrao.jpg" : livro.ImagemCapa)"
+                                 class="result-cover" />
+
+                            <div class="result-info">
+                                <h3>@livro.Titulo</h3>
+                                <div class="muted">@livro.Autor</div>
+                                <div class="muted">@livro.Genero</div>
+                                <p>@livro.Resumo</p>
+                            </div>
+                        </article>
+                    }
+                }
+                else
+                {
+                    <p class="muted">Nenhum livro encontrado.</p>
+                }
+            </section>
+
+            <section class="result-group">
+                <h2>Avaliações e comentários</h2>
+
+                @if (Model.Avaliacoes.Any())
+                {
+                    foreach (var avaliacao in Model.Avaliacoes)
+                    {
+                        <article class="post-card">
+                            <div class="post-head">
+                                <img src="@(string.IsNullOrWhiteSpace(avaliacao.Usuario?.FotoPerfil) ? "/imagens/usuario-padrao.png" : avaliacao.Usuario!.FotoPerfil)"
+                                     class="avatar-post" />
+
+                                <div>
+                                    <strong>@(avaliacao.Usuario?.NomeExibicao ?? avaliacao.Usuario?.Nome)</strong>
+                                    <div class="muted">@avaliacao.DataAvaliacao.ToString("dd/MM/yyyy HH:mm")</div>
+                                </div>
+                            </div>
+
+                            <h3 class="post-book">@avaliacao.Livro?.Titulo</h3>
+                            <div class="post-rating">Nota: @avaliacao.Nota / 5</div>
+                            <p class="post-text">@avaliacao.Comentario</p>
+                        </article>
+                    }
+                }
+                else
+                {
+                    <p class="muted">Nenhuma avaliação encontrada.</p>
+                }
+            </section>
+        </div>
+    }
+</div>

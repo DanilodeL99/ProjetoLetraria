@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿// ===== ViewModels/EditarPerfilViewModel.cs =====
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http;
 
 namespace ProjetoLetraria.ViewModels
@@ -19,8 +20,10 @@ namespace ProjetoLetraria.ViewModels
         public IFormFile? FotoArquivo { get; set; }
 
         public string? SenhaAtual { get; set; }
+
         [MinLength(6, ErrorMessage = "A nova senha deve ter no mínimo 6 caracteres.")]
         public string? NovaSenha { get; set; }
+
         [Compare("NovaSenha", ErrorMessage = "As senhas não coincidem.")]
         public string? ConfirmarNovaSenha { get; set; }
     }

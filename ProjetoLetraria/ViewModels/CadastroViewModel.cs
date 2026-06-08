@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿// ===== ViewModels/CadastroViewModel.cs =====
+using System.ComponentModel.DataAnnotations;
 
 namespace ProjetoLetraria.ViewModels
 {

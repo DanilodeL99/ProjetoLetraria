@@ -1,0 +1,26 @@
+﻿@* Views/Sistema/Configuracoes.cshtml *@
+@{
+    ViewData["Title"] = "Configurações do sistema";
+    var tema = Context.Request.Cookies["tema"] ?? "dark";
+}
+
+<div class="settings-page">
+    <div class="settings-card">
+        <h1>Configurações do sistema</h1>
+        <p>Altere apenas as preferências da plataforma.</p>
+
+        <div class="settings-option">
+            <div>
+                <strong>Tema</strong>
+                <p>Alternar entre modo escuro e claro.</p>
+            </div>
+
+            <form asp-controller="Sistema" asp-action="AlternarTema" method="post">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn-twitter">
+                    @(tema == "light" ? "Ativar modo escuro" : "Ativar modo claro")
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

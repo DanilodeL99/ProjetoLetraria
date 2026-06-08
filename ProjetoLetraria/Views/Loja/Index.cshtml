@@ -1,0 +1,58 @@
+﻿@* Views/Loja/Index.cshtml *@
+@model List<ProjetoLetraria.Models.Livro>
+@{
+    ViewData["Title"] = "Loja";
+}
+
+<div class="shop-page">
+    <div class="shop-hero">
+        <div>
+            <h1>Loja</h1>
+            <p>Explore livros para compra ou resgate gratuito.</p>
+        </div>
+
+        <form class="shop-search" method="get" asp-action="Index">
+            <input type="text" name="q" placeholder="Pesquisar por título, autor ou gênero" value="@Context.Request.Query["q"]" />
+            <button type="submit">Buscar</button>
+        </form>
+    </div>
+
+    <div class="shop-grid">
+        @foreach (var livro in Model)
+        {
+            var gratuito = (livro.Preco ?? 0m) <= 0m;
+
+            <article class="product-card">
+                <img src="@(string.IsNullOrWhiteSpace(livro.ImagemCapa) ? "/imagens/capa-padrao.jpg" : livro.ImagemCapa)"
+                     class="product-cover" />
+
+                <div class="product-body">
+                    <h3>@livro.Titulo</h3>
+                    <div class="muted">@livro.Autor</div>
+
+                    @if (gratuito)
+                    {
+                        <div class="product-price">Gratuito</div>
+                        <span class="rescue-badge">Resgate grátis</span>
+                    }
+                    else
+                    {
+                        <div class="product-price">R$ @((livro.Preco ?? 0).ToString("0.00"))</div>
+                    }
+
+                    <div class="product-actions">
+                        @if (gratuito)
+                        {
+                            <a asp-controller="Loja" asp-action="Resgatar" asp-route-id="@livro.IdLivro" class="btn-twitter">Resgatar</a>
+                        }
+                        else
+                        {
+                            <a asp-controller="Carrinho" asp-action="Adicionar" asp-route-id="@livro.IdLivro" class="btn-secondary">Adicionar</a>
+                            <a asp-controller="Carrinho" asp-action="Adicionar" asp-route-id="@livro.IdLivro" class="btn-twitter">Comprar</a>
+                        }
+                    </div>
+                </div>
+            </article>
+        }
+    </div>
+</div>

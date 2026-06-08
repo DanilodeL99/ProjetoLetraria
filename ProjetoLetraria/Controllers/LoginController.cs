@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿// ===== Controllers/LoginController.cs =====
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ProjetoLetraria.Data;
 using ProjetoLetraria.Models;
 using ProjetoLetraria.ViewModels;
-using Microsoft.AspNetCore.Http;
 
 namespace ProjetoLetraria.Controllers
 {
@@ -15,7 +16,6 @@ namespace ProjetoLetraria.Controllers
             _context = context;
         }
 
-
         [HttpGet]
         public IActionResult Index()
         {
@@ -23,31 +23,27 @@ namespace ProjetoLetraria.Controllers
         }
 
         [HttpPost]
-        public IActionResult Logar(LoginViewModel model)
+        public async Task<IActionResult> Logar(LoginViewModel model)
         {
             if (!ModelState.IsValid)
-            {
                 return View("Index", model);
-            }
 
-            var usuario = _context.Usuarios
-                .FirstOrDefault(u =>
-                    u.Email == model.Email &&
-                    u.Senha == model.Senha);
+            var usuario = await _context.Usuarios
+                .FirstOrDefaultAsync(u => u.Email == model.Email && u.Senha == model.Senha);
 
             if (usuario == null)
             {
                 ViewBag.Erro = "E-mail ou senha inválidos.";
-                return View("Index");
+                return View("Index", model);
             }
 
-            HttpContext.Session.SetString("UsuarioNome", usuario.Nome);
-            HttpContext.Session.SetString("TipoUsuario", usuario.TipoUsuario);
             HttpContext.Session.SetInt32("IdUsuario", usuario.IdUsuario);
+            HttpContext.Session.SetString("UsuarioNome", usuario.NomeExibicao ?? usuario.Nome);
+            HttpContext.Session.SetString("TipoUsuario", usuario.TipoUsuario);
+            HttpContext.Session.SetString("FotoPerfil", usuario.FotoPerfil ?? "");
 
             return RedirectToAction("Index", "Home");
         }
-
 
         [HttpGet]
         public IActionResult Cadastro()
@@ -56,55 +52,50 @@ namespace ProjetoLetraria.Controllers
         }
 
         [HttpPost]
-        public IActionResult Cadastro(CadastroViewModel model)
+        public async Task<IActionResult> Cadastro(CadastroViewModel model)
         {
             if (!ModelState.IsValid)
-            {
                 return View(model);
-            }
 
-            bool emailExiste = _context.Usuarios
-                .Any(u => u.Email == model.Email);
-
+            var emailExiste = await _context.Usuarios.AnyAsync(u => u.Email == model.Email);
             if (emailExiste)
             {
-                ModelState.AddModelError("Email", "Este e-mail já está cadastrada.");
+                ModelState.AddModelError("Email", "Esse e-mail já está cadastrado.");
                 return View(model);
             }
 
-            if (model.TipoUsuario == "PROFESSOR" &&
-                string.IsNullOrWhiteSpace(model.Cndb))
+            if (model.TipoUsuario == "PROFESSOR" && string.IsNullOrWhiteSpace(model.Cndb))
             {
-                ModelState.AddModelError("Cndb",
-                    "A CNDB é obrigatória para professores.");
-
+                ModelState.AddModelError("Cndb", "A CNDB é obrigatória para professores.");
                 return View(model);
             }
 
-            Usuario usuario = new Usuario
+            var usuario = new Usuario
             {
                 Nome = model.Nome,
+                NomeExibicao = model.Nome,
                 Email = model.Email,
                 Senha = model.Senha,
                 TipoUsuario = model.TipoUsuario,
-                Cndb = model.TipoUsuario == "PROFESSOR"
-                    ? model.Cndb
-                    : null,
-
-                DataCriacao = DateTime.Now
+                Cndb = model.TipoUsuario == "PROFESSOR" ? model.Cndb : null,
+                DataCriacao = DateTime.Now,
+                FotoPerfil = null
             };
 
             _context.Usuarios.Add(usuario);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
-            return RedirectToAction("Index");
+            HttpContext.Session.SetInt32("IdUsuario", usuario.IdUsuario);
+            HttpContext.Session.SetString("UsuarioNome", usuario.NomeExibicao ?? usuario.Nome);
+            HttpContext.Session.SetString("TipoUsuario", usuario.TipoUsuario);
+            HttpContext.Session.SetString("FotoPerfil", "");
+
+            return RedirectToAction("Index", "Home");
         }
-
 
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();
-
             return RedirectToAction("Index");
         }
     }

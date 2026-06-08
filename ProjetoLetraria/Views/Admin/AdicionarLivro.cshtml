@@ -1,84 +1,88 @@
-﻿@model ProjetoLetraria.ViewModels.LivroFormViewModel
+﻿@* Views/Admin/AdicionarLivro.cshtml *@
+@model ProjetoLetraria.ViewModels.LivroFormViewModel
 @{
-    ViewData["Title"] = "Adicionar Livro";
+    ViewData["Title"] = "Adicionar livro";
 }
 
-<div class="card card-letraria p-4">
-    <h1 class="fw-bold mb-4">Adicionar livro</h1>
+<div class="admin-form-page">
+    <div class="admin-form-card">
+        <h1>Adicionar livro</h1>
 
-    <form asp-action="AdicionarLivro" method="post">
-        <div class="row g-3">
-            <div class="col-md-6">
-                <label class="form-label">Título</label>
+        <form asp-action="AdicionarLivro" method="post" class="admin-form-grid">
+            <div class="form-row">
+                <label>Título</label>
                 <input asp-for="Titulo" class="form-control" />
                 <span asp-validation-for="Titulo" class="text-danger"></span>
             </div>
 
-            <div class="col-md-6">
-                <label class="form-label">Autor</label>
+            <div class="form-row">
+                <label>Autor</label>
                 <input asp-for="Autor" class="form-control" />
                 <span asp-validation-for="Autor" class="text-danger"></span>
             </div>
 
-            <div class="col-12">
-                <label class="form-label">Resumo</label>
-                <textarea asp-for="Resumo" class="form-control" rows="4"></textarea>
+            <div class="form-row full">
+                <label>Resumo</label>
+                <textarea asp-for="Resumo" class="form-control"></textarea>
                 <span asp-validation-for="Resumo" class="text-danger"></span>
             </div>
 
-            <div class="col-md-4">
-                <label class="form-label">Gênero</label>
+            <div class="form-row">
+                <label>Gênero</label>
                 <input asp-for="Genero" class="form-control" />
-                <span asp-validation-for="Genero" class="text-danger"></span>
             </div>
 
-            <div class="col-md-4">
-                <label class="form-label">Imagem da capa</label>
+            <div class="form-row">
+                <label>Imagem da capa</label>
                 <input asp-for="ImagemCapa" class="form-control" />
             </div>
 
-            <div class="col-md-4">
-                <label class="form-label">Tipo de acesso</label>
-                <select asp-for="TipoAcesso" class="form-select">
+            <div class="form-row">
+                <label>Tipo de acesso</label>
+                <select asp-for="TipoAcesso" class="form-control">
                     <option value="DIGITAL">Digital</option>
                     <option value="COMPRA">Compra</option>
                 </select>
             </div>
 
-            <div class="col-md-4">
-                <label class="form-label">Preço</label>
+            <div class="form-row">
+                <label>Link de compra</label>
+                <input asp-for="LinkCompra" class="form-control" />
+            </div>
+
+            <div class="form-row">
+                <label>Arquivo do livro</label>
+                <input asp-for="ArquivoLivro" class="form-control" />
+            </div>
+
+            <div class="form-row">
+                <label>Preço</label>
                 <input asp-for="Preco" class="form-control" />
             </div>
 
-            <div class="col-12">
-                <label class="form-label">Tags</label>
-                <div class="row g-2">
-                    @for (int i = 0; i < Model.TagsDisponiveis.Count; i++)
+            <div class="form-row">
+                <label>
+                    <input asp-for="LivroGratis" id="livroGratis" type="checkbox" />
+                    Livro gratuito
+                </label>
+            </div>
+
+            <div class="form-row">
+                <label>Tags</label>
+                <div class="tags-box">
+                    @foreach (var tag in Model.TagsDisponiveis)
                     {
-                        var tag = Model.TagsDisponiveis[i];
-                        <div class="col-6 col-md-4 col-xl-3">
-                            <div class="form-check border rounded-3 p-2 bg-white">
-                                <input class="form-check-input"
-                                       type="checkbox"
-                                       name="TagsSelecionadas"
-                                       value="@tag.IdTag"
-                                       id="tag_@tag.IdTag" />
-                                <label class="form-check-label" for="tag_@tag.IdTag">
-                                    @tag.Nome
-                                </label>
-                            </div>
-                        </div>
+                        <label class="tag-check">
+                            <input type="checkbox" name="TagsSelecionadas" value="@tag.IdTag" />
+                            <span>@tag.Nome</span>
+                        </label>
                     }
                 </div>
             </div>
 
-            <div class="col-12 mt-3">
-                <button type="submit" class="btn btn-letraria px-4">Salvar</button>
+            <div class="form-row full">
+                <button type="submit" class="btn-twitter">Salvar</button>
             </div>
-        </div>
-    </form>
+        </form>
+    </div>
 </div>
-
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}

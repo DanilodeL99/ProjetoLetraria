@@ -1,25 +1,22 @@
-﻿@model List<ProjetoLetraria.Models.Livro>
+﻿@* Views/Admin/Livros.cshtml *@
+@model List<ProjetoLetraria.Models.Livro>
 @{
     ViewData["Title"] = "Painel Admin";
 }
 
-<div class="card card-letraria p-4 mb-4">
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+<div class="admin-page">
+    <div class="admin-header">
         <div>
-            <h1 class="fw-bold mb-1">Gerenciar livros</h1>
-            <p class="text-muted mb-0">Apenas administradores podem adicionar, editar e excluir livros.</p>
+            <h1>Painel Admin</h1>
+            <p>Gerencie livros da plataforma.</p>
         </div>
-
-        <a asp-action="AdicionarLivro" class="btn btn-letraria px-4">Adicionar livro</a>
+        <a asp-action="AdicionarLivro" class="btn-twitter">Adicionar livro</a>
     </div>
-</div>
 
-<div class="card card-letraria p-3">
-    <div class="table-responsive">
-        <table class="table align-middle mb-0">
+    <div class="admin-table-card">
+        <table class="admin-table">
             <thead>
                 <tr>
-                    <th>ID</th>
                     <th>Título</th>
                     <th>Autor</th>
                     <th>Preço</th>
@@ -30,13 +27,12 @@
                 @foreach (var livro in Model)
                 {
                     <tr>
-                        <td>@livro.IdLivro</td>
                         <td>@livro.Titulo</td>
                         <td>@livro.Autor</td>
                         <td>@(livro.Preco.HasValue ? $"R$ {livro.Preco:0.00}" : "Gratuito")</td>
-                        <td class="d-flex gap-2">
-                            <a asp-action="EditarLivro" asp-route-id="@livro.IdLivro" class="btn btn-sm btn-outline-primary">Editar</a>
-                            <a asp-action="ExcluirLivro" asp-route-id="@livro.IdLivro" class="btn btn-sm btn-outline-danger">Excluir</a>
+                        <td class="admin-actions">
+                            <a asp-action="EditarLivro" asp-route-id="@livro.IdLivro">Editar</a>
+                            <a asp-action="ExcluirLivro" asp-route-id="@livro.IdLivro" class="danger">Excluir</a>
                         </td>
                     </tr>
                 }

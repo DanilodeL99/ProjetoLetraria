@@ -10,38 +10,31 @@ namespace ProjetoLetraria.Models
         [Column("id_livro")]
         public int IdLivro { get; set; }
 
-        [Required(ErrorMessage = "O título é obrigatório.")]
-        [StringLength(200)]
+        [Required]
         [Column("titulo")]
         public string Titulo { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "O autor é obrigatório.")]
-        [StringLength(150)]
+        [Required]
         [Column("autor")]
         public string Autor { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "O resumo é obrigatório.")]
+        [Required]
         [Column("resumo")]
         public string Resumo { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "O gênero é obrigatório.")]
-        [StringLength(100)]
+        [Required]
         [Column("genero")]
         public string Genero { get; set; } = string.Empty;
 
-        [StringLength(255)]
         [Column("imagem_capa")]
         public string? ImagemCapa { get; set; }
 
-        [Required(ErrorMessage = "O tipo de acesso é obrigatório.")]
         [Column("tipo_acesso")]
-        public string TipoAcesso { get; set; } = string.Empty;
+        public string TipoAcesso { get; set; } = "DIGITAL";
 
-        [StringLength(255)]
         [Column("link_compra")]
         public string? LinkCompra { get; set; }
 
-        [StringLength(255)]
         [Column("arquivo_livro")]
         public string? ArquivoLivro { get; set; }
 
@@ -57,6 +50,10 @@ namespace ProjetoLetraria.Models
         [Column("data_cadastro")]
         public DateTime DataCadastro { get; set; }
 
-        public ICollection<LivroTag> LivroTags { get; set; } = new List<LivroTag>();
+        public ICollection<LivroTag> LivroTags { get; set; }
+            = new List<LivroTag>();
+
+        public ICollection<Avaliacao> Avaliacoes { get; set; }
+            = new List<Avaliacao>();
     }
 }

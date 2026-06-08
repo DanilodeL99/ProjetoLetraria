@@ -1,5 +1,5 @@
-﻿@model ProjetoLetraria.ViewModels.LoginViewModel
-
+﻿@* Views/Login/Index.cshtml *@
+@model ProjetoLetraria.ViewModels.LoginViewModel
 @{
     Layout = null;
 }
@@ -8,179 +8,54 @@
 <html lang="pt-br">
 <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Letraria - Login</title>
-
-    <style>
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial;
-        }
-
-        body {
-            background: #e8e0d8;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .container-login {
-            width: 900px;
-            height: 550px;
-            background: white;
-            border-radius: 20px;
-            overflow: hidden;
-            display: flex;
-            box-shadow: 0 0 20px rgba(0,0,0,0.2);
-        }
-
-        .lado-imagem {
-            width: 50%;
-            background: url('https://images.unsplash.com/photo-1512820790803-83ca734da794?q=80&w=1200') center;
-            background-size: cover;
-        }
-
-        .lado-formulario {
-            width: 50%;
-            padding: 60px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .titulo {
-            font-size: 42px;
-            color: #0b7c80;
-            margin-bottom: 10px;
-        }
-
-        .subtitulo {
-            color: #777;
-            margin-bottom: 40px;
-        }
-
-        .campo {
-            margin-bottom: 20px;
-        }
-
-            .campo label {
-                display: block;
-                margin-bottom: 5px;
-                color: #333;
-            }
-
-            .campo input {
-                width: 100%;
-                padding: 14px;
-                border: none;
-                border-radius: 10px;
-                background: #f1f1f1;
-                font-size: 15px;
-            }
-
-        .botao-login {
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 10px;
-            background: #0b7c80;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-            .botao-login:hover {
-                background: #095f61;
-            }
-
-        .link-cadastro {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-            .link-cadastro a {
-                color: #0b7c80;
-                text-decoration: none;
-                font-weight: bold;
-            }
-
-        .erro {
-            color: red;
-            margin-bottom: 15px;
-        }
-
-        .validacao {
-            color: red;
-            font-size: 13px;
-            margin-top: 5px;
-        }
-
-    </style>
+    <link rel="stylesheet" href="~/css/site.css" />
 </head>
-<body>
+<body class="login-bg">
 
-    <div class="container-login">
+    <div class="login-wrap">
+        <div class="login-hero">
+            <div class="login-hero-overlay">
+                <img src="~/imagens/logo-letraria.jpeg" alt="Letraria" class="login-brand-image" />
+                <h1>Letraria</h1>
+                <p>Sua biblioteca digital educacional</p>
+            </div>
+        </div>
 
-        <div class="lado-imagem"></div>
-
-        <div class="lado-formulario">
-
-            <h1 class="titulo">Letraria</h1>
-
-            <p class="subtitulo">
-                Sua biblioteca digital educacional
-            </p>
+        <div class="login-form-box">
+            <h2>Entrar</h2>
+            <p>Acesse sua conta para continuar.</p>
 
             @if (ViewBag.Erro != null)
             {
-                <div class="erro">
+                <div class="card-panel" style="margin-bottom:18px;border-color:#7a2630;background:#2a1418;">
                     @ViewBag.Erro
                 </div>
             }
 
             <form asp-controller="Login" asp-action="Logar" method="post">
-
-                <div class="campo">
+                <div class="form-row">
                     <label>E-mail</label>
-
-                    <input asp-for="Email" placeholder="Digite seu e-mail" />
-
-                    <span asp-validation-for="Email" class="validacao"></span>
+                    <input asp-for="Email" class="form-control" placeholder="Digite seu e-mail" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
 
-                <div class="campo">
+                <div class="form-row">
                     <label>Senha</label>
-
-                    <input asp-for="Senha"
-                           type="password"
-                           placeholder="Digite sua senha" />
-
-                    <span asp-validation-for="Senha" class="validacao"></span>
+                    <input asp-for="Senha" type="password" class="form-control" placeholder="Digite sua senha" />
+                    <span asp-validation-for="Senha" class="text-danger"></span>
                 </div>
 
-                <button type="submit" class="botao-login">
-                    Entrar
-                </button>
-
+                <button type="submit" class="btn-twitter full-width">Entrar</button>
             </form>
 
-            <div class="link-cadastro">
-                Não possui conta?
-                <a asp-controller="Login"
-                   asp-action="Cadastro">
-                    Criar conta
-                </a>
+            <div class="center-link">
+                <a asp-controller="Login" asp-action="Cadastro">Criar conta</a>
             </div>
-
         </div>
-
     </div>
 
     <partial name="_ValidationScriptsPartial" />
-
 </body>
 </html>

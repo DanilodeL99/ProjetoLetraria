@@ -1,0 +1,22 @@
+﻿@* Views/Biblioteca/Index.cshtml *@
+@model List<ProjetoLetraria.Models.Livro>
+@{
+    ViewData["Title"] = "Biblioteca";
+}
+
+<div class="library-page">
+    <h1>Minha Biblioteca</h1>
+
+    <div class="library-grid">
+        @foreach (var livro in Model)
+        {
+            <article class="library-card">
+                <img src="@(string.IsNullOrWhiteSpace(livro.ImagemCapa) ? "/imagens/capa-padrao.jpg" : livro.ImagemCapa)"
+                     class="library-cover" />
+                <h3>@livro.Titulo</h3>
+                <p class="muted">@livro.Autor</p>
+                <a href="#" class="btn-twitter full-width">Ler livro</a>
+            </article>
+        }
+    </div>
+</div>

@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using ProjetoLetraria.Models;
+﻿using ProjetoLetraria.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace ProjetoLetraria.ViewModels
 {
@@ -24,16 +24,13 @@ namespace ProjetoLetraria.ViewModels
         [Required(ErrorMessage = "O tipo de acesso é obrigatório.")]
         public string TipoAcesso { get; set; } = "DIGITAL";
 
-
         public string? LinkCompra { get; set; }
 
         public string? ArquivoLivro { get; set; }
 
-        public bool PossuiAmostra { get; set; }
-
-        public int? LimiteAmostra { get; set; }
-
         public decimal? Preco { get; set; }
+
+        public bool LivroGratis { get; set; }
 
         public List<int> TagsSelecionadas { get; set; } = new();
 

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿// ===== Models/Usuario.cs =====
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProjetoLetraria.Models
@@ -10,39 +11,39 @@ namespace ProjetoLetraria.Models
         [Column("id_usuario")]
         public int IdUsuario { get; set; }
 
-        [Required(ErrorMessage = "O nome é obrigatório.")]
+        [Required]
         [StringLength(100)]
         [Column("nome")]
         public string Nome { get; set; } = string.Empty;
-
-        [Required(ErrorMessage = "O e-mail é obrigatório.")]
-        [EmailAddress(ErrorMessage = "Informe um e-mail válido.")]
-        [StringLength(150)]
-        [Column("email")]
-        public string Email { get; set; } = string.Empty;
-
-        [Required(ErrorMessage = "A senha é obrigatória.")]
-        [StringLength(255)]
-        [Column("senha")]
-        public string Senha { get; set; } = string.Empty;
-
-        [Required(ErrorMessage = "O tipo de usuário é obrigatório.")]
-        [Column("tipo_usuario")]
-        public string TipoUsuario { get; set; } = string.Empty; 
-
-        [StringLength(50)]
-        [Column("cndb")]
-        public string? Cndb { get; set; }
-
-        [Column("data_criacao")]
-        public DateTime DataCriacao { get; set; }
 
         [StringLength(100)]
         [Column("nome_exibicao")]
         public string? NomeExibicao { get; set; }
 
+        [Required]
+        [StringLength(150)]
+        [Column("email")]
+        public string Email { get; set; } = string.Empty;
+
+        [Required]
+        [StringLength(255)]
+        [Column("senha")]
+        public string Senha { get; set; } = string.Empty;
+
+        [Required]
+        [StringLength(20)]
+        [Column("tipo_usuario")]
+        public string TipoUsuario { get; set; } = string.Empty;
+
+        [StringLength(50)]
+        [Column("cndb")]
+        public string? Cndb { get; set; }
+
         [StringLength(255)]
         [Column("foto_perfil")]
         public string? FotoPerfil { get; set; }
+
+        [Column("data_criacao")]
+        public DateTime DataCriacao { get; set; }
     }
 }
