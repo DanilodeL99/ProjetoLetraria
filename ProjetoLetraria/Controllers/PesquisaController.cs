@@ -20,12 +20,12 @@ namespace ProjetoLetraria.Controllers
         {
             var vm = new PesquisaViewModel
             {
-                Termo = termo
+                Termo = termo?.Trim()
             };
 
-            if (!string.IsNullOrWhiteSpace(termo))
+            if (!string.IsNullOrWhiteSpace(vm.Termo))
             {
-                var like = $"%{termo.Trim()}%";
+                var like = $"%{vm.Termo}%";
 
                 vm.Livros = await _context.Livros
                     .Where(l =>
@@ -34,6 +34,14 @@ namespace ProjetoLetraria.Controllers
                         EF.Functions.Like(l.Genero, like) ||
                         EF.Functions.Like(l.Resumo, like))
                     .OrderBy(l => l.Titulo)
+                    .ToListAsync();
+
+                vm.Usuarios = await _context.Usuarios
+                    .Where(u =>
+                        EF.Functions.Like(u.Nome, like) ||
+                        EF.Functions.Like(u.NomeExibicao ?? "", like) ||
+                        EF.Functions.Like(u.Email, like))
+                    .OrderBy(u => u.Nome)
                     .ToListAsync();
 
                 vm.Avaliacoes = await _context.Avaliacoes

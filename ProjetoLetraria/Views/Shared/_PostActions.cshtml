@@ -1,0 +1,56 @@
+﻿// Views/Shared/_PostActions.cshtml
+@model dynamic
+@{
+    var idAvaliacao = (int)Model.IdAvaliacao;
+    var podeExcluir = (bool)Model.PodeExcluir;
+    var qtdCurtidas = (int)Model.Curtidas;
+    var qtdComentarios = (int)Model.Comentarios;
+    var idUsuarioAvaliacao = (int)Model.IdUsuarioAvaliacao;
+    var tipoUsuarioAvaliacao = (string)Model.TipoUsuarioAvaliacao;
+    var nomeUsuario = (string)Model.NomeUsuario;
+    var fotoPerfil = (string)Model.FotoPerfil;
+}
+
+<div class="acoes-post">
+    <form asp-controller="Feed" asp-action="Curtir" method="post" class="like-form">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="id" value="@idAvaliacao" />
+        <button type="submit" class="btn-like">
+            <span class="like-icon">❤️</span>
+            <span class="like-count">@qtdCurtidas</span>
+        </button>
+    </form>
+
+    <details class="replies-box">
+        <summary>💬 @qtdComentarios respostas</summary>
+        <div class="replies-content">
+            @foreach (var comentario in (IEnumerable<dynamic>)Model.ComentariosLista)
+            {
+                <div class="comentario-feed">
+                    <a asp-controller="Usuario"
+                       asp-action="Perfil"
+                       asp-route-id="@comentario.IdUsuario"
+                       class="profile-link-name">
+                        <strong>@comentario.Nome</strong>
+                        <span class="role-badge @comentario.Tipo.ToLower()">@comentario.Tipo</span>
+                    </a>
+                    <p>@comentario.Texto</p>
+                </div>
+            }
+        </div>
+    </details>
+
+    @if (podeExcluir)
+    {
+        <details class="post-menu">
+            <summary class="post-menu-btn">⋯</summary>
+            <div class="post-menu-box">
+                <form asp-controller="Feed" asp-action="ExcluirAvaliacao" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" value="@idAvaliacao" />
+                    <button type="submit" class="post-menu-action danger">Excluir opinião</button>
+                </form>
+            </div>
+        </details>
+    }
+</div>

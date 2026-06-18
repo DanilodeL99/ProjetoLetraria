@@ -1,0 +1,23 @@
+﻿@* Views/Shared/Components/LivrosDestaque/Default.cshtml *@
+@model List<ProjetoLetraria.Models.Livro>
+
+<div class="card-lateral">
+    <h3>Sobre a Letraria</h3>
+    <p>Descubra, avalie e compartilhe livros com sua comunidade.</p>
+</div>
+
+<div class="card-lateral">
+    <h3>Livros em destaque</h3>
+
+    @foreach (var livro in Model)
+    {
+        <a asp-controller="Loja" asp-action="Index" class="spot-book">
+            <img src="@(string.IsNullOrWhiteSpace(livro.ImagemCapa) ? "/imagens/capa-padrao.jpg" : livro.ImagemCapa)"
+                 class="spot-cover" />
+            <div>
+                <strong>@livro.Titulo</strong>
+                <div class="muted">@livro.Autor</div>
+            </div>
+        </a>
+    }
+</div>

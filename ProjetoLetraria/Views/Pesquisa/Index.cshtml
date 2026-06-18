@@ -2,11 +2,11 @@
 @model ProjetoLetraria.ViewModels.PesquisaViewModel
 
 <div class="search-page">
-    <div class="search-top card-panel">
+    <div class="card-composer">
         <h1>Pesquisar</h1>
 
         <form asp-action="Index" method="get" class="search-form">
-            <input type="text" name="termo" value="@Model.Termo" placeholder="Pesquise livro, autor, comentário ou tema..." class="search-input" />
+            <input type="text" name="termo" value="@Model.Termo" placeholder="Pesquise livros, obras, comentários ou usuários..." class="search-input" />
             <button type="submit" class="btn-twitter">Buscar</button>
         </form>
     </div>
@@ -14,6 +14,45 @@
     @if (!string.IsNullOrWhiteSpace(Model.Termo))
     {
         <div class="search-results">
+            <section class="result-group">
+                <h2>Usuários</h2>
+
+                @if (Model.Usuarios.Any())
+                {
+                    foreach (var usuario in Model.Usuarios)
+                    {
+                        <article class="user-result-card">
+                            <a asp-controller="Usuario"
+                               asp-action="Perfil"
+                               asp-route-id="@usuario.IdUsuario"
+                               class="user-result-link">
+                                <img src="@(string.IsNullOrWhiteSpace(usuario.FotoPerfil) ? "/imagens/usuario-padrao.png" : usuario.FotoPerfil)"
+                                     class="user-result-avatar" />
+
+                                <div class="user-result-info">
+                                    <strong>
+                                        @(usuario.NomeExibicao ?? usuario.Nome)
+                                        <span class="role-badge @(usuario.TipoUsuario.ToLower())">@usuario.TipoUsuario</span>
+                                    </strong>
+                                    <div class="muted">@usuario.Email</div>
+                                </div>
+                            </a>
+
+                            <a asp-controller="Usuario"
+                               asp-action="Perfil"
+                               asp-route-id="@usuario.IdUsuario"
+                               class="btn-secondary">
+                                Ver perfil
+                            </a>
+                        </article>
+                    }
+                }
+                else
+                {
+                    <p class="muted">Nenhum usuário encontrado.</p>
+                }
+            </section>
+
             <section class="result-group">
                 <h2>Livros</h2>
 
@@ -29,6 +68,18 @@
                                 <h3>@livro.Titulo</h3>
                                 <div class="muted">@livro.Autor</div>
                                 <div class="muted">@livro.Genero</div>
+
+                                <div class="book-badges">
+                                    @if (livro.PossuiDigital)
+                                    {
+                                        <span class="book-badge digital">Digital</span>
+                                    }
+                                    @if (livro.PossuiFisico)
+                                    {
+                                        <span class="book-badge fisico">Físico</span>
+                                    }
+                                </div>
+
                                 <p>@livro.Resumo</p>
                             </div>
                         </article>
@@ -41,21 +92,52 @@
             </section>
 
             <section class="result-group">
-                <h2>Avaliações e comentários</h2>
+                <h2>Avaliações</h2>
 
                 @if (Model.Avaliacoes.Any())
                 {
                     foreach (var avaliacao in Model.Avaliacoes)
                     {
+                        var tipoUsuario = avaliacao.Usuario?.TipoUsuario?.ToLower() ?? "aluno";
+                        var idLogado = Context.Session.GetInt32("IdUsuario");
+                        var tipoLogado = Context.Session.GetString("TipoUsuario");
+                        var podeExcluir = tipoLogado == "ADMIN" || tipoLogado == "PROFESSOR" || (idLogado.HasValue && idLogado.Value == avaliacao.Usuario?.IdUsuario);
+
                         <article class="post-card">
                             <div class="post-head">
-                                <img src="@(string.IsNullOrWhiteSpace(avaliacao.Usuario?.FotoPerfil) ? "/imagens/usuario-padrao.png" : avaliacao.Usuario!.FotoPerfil)"
-                                     class="avatar-post" />
+                                <a asp-controller="Usuario"
+                                   asp-action="Perfil"
+                                   asp-route-id="@avaliacao.Usuario!.IdUsuario"
+                                   class="profile-link">
+                                    <img src="@(string.IsNullOrWhiteSpace(avaliacao.Usuario?.FotoPerfil) ? "/imagens/usuario-padrao.png" : avaliacao.Usuario!.FotoPerfil)"
+                                         class="avatar-post" />
+                                </a>
 
                                 <div>
-                                    <strong>@(avaliacao.Usuario?.NomeExibicao ?? avaliacao.Usuario?.Nome)</strong>
+                                    <a asp-controller="Usuario"
+                                       asp-action="Perfil"
+                                       asp-route-id="@avaliacao.Usuario!.IdUsuario"
+                                       class="profile-link-name">
+                                        <strong>@(avaliacao.Usuario?.NomeExibicao ?? avaliacao.Usuario?.Nome)</strong>
+                                        <span class="role-badge @tipoUsuario">@avaliacao.Usuario?.TipoUsuario</span>
+                                    </a>
+
                                     <div class="muted">@avaliacao.DataAvaliacao.ToString("dd/MM/yyyy HH:mm")</div>
                                 </div>
+
+                                @if (podeExcluir)
+                                {
+                                    <details class="post-menu">
+                                        <summary class="post-menu-btn">⋯</summary>
+                                        <div class="post-menu-box">
+                                            <form asp-controller="Feed" asp-action="ExcluirAvaliacao" method="post">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="id" value="@avaliacao.IdAvaliacao" />
+                                                <button type="submit" class="post-menu-action danger">Excluir opinião</button>
+                                            </form>
+                                        </div>
+                                    </details>
+                                }
                             </div>
 
                             <h3 class="post-book">@avaliacao.Livro?.Titulo</h3>

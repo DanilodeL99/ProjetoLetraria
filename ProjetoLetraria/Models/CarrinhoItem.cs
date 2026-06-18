@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿// Models/CarrinhoItem.cs
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProjetoLetraria.Models
@@ -18,6 +19,9 @@ namespace ProjetoLetraria.Models
 
         [Column("quantidade")]
         public int Quantidade { get; set; } = 1;
+
+        [Column("formato_selecionado")]
+        public string FormatoSelecionado { get; set; } = "DIGITAL";
 
         [ForeignKey(nameof(IdLivro))]
         public Livro? Livro { get; set; }

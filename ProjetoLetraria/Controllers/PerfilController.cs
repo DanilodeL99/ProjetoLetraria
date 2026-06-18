@@ -45,6 +45,7 @@ namespace ProjetoLetraria.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Editar(EditarPerfilViewModel model)
         {
             var idUsuario = ObterIdUsuario();
@@ -61,8 +62,8 @@ namespace ProjetoLetraria.Controllers
                 return View(model);
             }
 
-            var emailExiste = await _context.Usuarios
-                .AnyAsync(x => x.Email == model.Email && x.IdUsuario != idUsuario.Value);
+            var emailExiste = await _context.Usuarios.AnyAsync(x =>
+                x.Email == model.Email && x.IdUsuario != idUsuario.Value);
 
             if (emailExiste)
             {
@@ -71,9 +72,9 @@ namespace ProjetoLetraria.Controllers
                 return View(model);
             }
 
-            usuario.Nome = model.Nome;
-            usuario.NomeExibicao = model.NomeExibicao;
-            usuario.Email = model.Email;
+            usuario.Nome = model.Nome.Trim();
+            usuario.NomeExibicao = model.NomeExibicao.Trim();
+            usuario.Email = model.Email.Trim();
 
             if (model.FotoArquivo != null && model.FotoArquivo.Length > 0)
             {
@@ -81,10 +82,12 @@ namespace ProjetoLetraria.Controllers
                 Directory.CreateDirectory(pasta);
 
                 var nomeArquivo = $"{Guid.NewGuid()}{Path.GetExtension(model.FotoArquivo.FileName)}";
-                var caminho = Path.Combine(pasta, nomeArquivo);
+                var caminhoFisico = Path.Combine(pasta, nomeArquivo);
 
-                using var stream = new FileStream(caminho, FileMode.Create);
-                await model.FotoArquivo.CopyToAsync(stream);
+                using (var stream = new FileStream(caminhoFisico, FileMode.Create))
+                {
+                    await model.FotoArquivo.CopyToAsync(stream);
+                }
 
                 usuario.FotoPerfil = $"/uploads/perfis/{nomeArquivo}";
             }
@@ -98,7 +101,7 @@ namespace ProjetoLetraria.Controllers
                     return View(model);
                 }
 
-                usuario.Senha = model.NovaSenha;
+                usuario.Senha = model.NovaSenha.Trim();
             }
 
             await _context.SaveChangesAsync();
@@ -106,7 +109,7 @@ namespace ProjetoLetraria.Controllers
             HttpContext.Session.SetString("UsuarioNome", usuario.NomeExibicao ?? usuario.Nome);
             HttpContext.Session.SetString("FotoPerfil", usuario.FotoPerfil ?? "");
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Editar");
         }
     }
 }

@@ -7,8 +7,10 @@
 
 <div class="cart-page">
     <div class="cart-header">
-        <h1>Carrinho</h1>
-        <a asp-controller="Compra" asp-action="Finalizar" class="btn-twitter">Finalizar compra</a>
+        <div>
+            <h1>Carrinho</h1>
+            <p class="muted">Seleção de formato salva automaticamente.</p>
+        </div>
     </div>
 
     <div class="cart-grid">
@@ -21,12 +23,47 @@
                 <article class="cart-card">
                     <img src="@(string.IsNullOrWhiteSpace(item.Livro?.ImagemCapa) ? "/imagens/capa-padrao.jpg" : item.Livro!.ImagemCapa)"
                          class="cart-cover" />
+
                     <div class="cart-info">
                         <h3>@item.Livro?.Titulo</h3>
                         <p class="muted">@item.Livro?.Autor</p>
+
+                        <div class="book-badges">
+                            @if (item.Livro?.PossuiDigital == true)
+                            {
+                                <span class="book-badge digital">Digital</span>
+                            }
+                            @if (item.Livro?.PossuiFisico == true)
+                            {
+                                <span class="book-badge fisico">Físico</span>
+                            }
+                        </div>
+
                         <p>Qtd: @item.Quantidade</p>
-                        <p><strong>R$ @(preco.ToString("0.00"))</strong></p>
-                        <a asp-action="Remover" asp-route-id="@item.IdCarrinho">Remover</a>
+                        <p><strong>R$ @preco.ToString("0.00")</strong></p>
+
+                        <form asp-action="AtualizarFormato" method="post" class="cart-item-form">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="idCarrinho" value="@item.IdCarrinho" />
+
+                            <label class="muted">Formato:</label>
+                            <select name="formatoSelecionado" class="form-control cart-select" onchange="this.form.submit()">
+                                @if (item.Livro?.PossuiDigital == true)
+                                {
+                                    <option value="DIGITAL" selected="@(item.FormatoSelecionado == "DIGITAL" ? "selected" : null)">Digital</option>
+                                }
+                                @if (item.Livro?.PossuiFisico == true)
+                                {
+                                    <option value="FISICO" selected="@(item.FormatoSelecionado == "FISICO" ? "selected" : null)">Físico</option>
+                                }
+                            </select>
+                        </form>
+
+                        <form asp-action="Remover" method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@item.IdCarrinho" />
+                            <button type="submit" class="cart-remove">Remover</button>
+                        </form>
                     </div>
                 </article>
             }
@@ -34,8 +71,9 @@
 
         <aside class="cart-summary">
             <h3>Resumo</h3>
+            <p>Total de itens: @Model.Sum(x => x.Quantidade)</p>
             <p>Total: <strong>R$ @total.ToString("0.00")</strong></p>
-            <a asp-controller="Compra" asp-action="Finalizar" class="btn-twitter full-width">Ir para pagamento</a>
+            <a asp-controller="Compra" asp-action="Finalizar" class="btn-twitter full-width">Ir para o pagamento</a>
         </aside>
     </div>
 </div>

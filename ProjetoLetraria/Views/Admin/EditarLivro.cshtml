@@ -8,8 +8,12 @@
     <div class="admin-form-card">
         <h1>Editar livro</h1>
 
-        <form asp-action="EditarLivro" method="post" class="admin-form-grid">
+        <form asp-action="EditarLivro" method="post" enctype="multipart/form-data" class="admin-form-grid">
+            @Html.AntiForgeryToken()
+
             <input type="hidden" asp-for="IdLivro" />
+            <input type="hidden" asp-for="ImagemCapa" />
+            <input type="hidden" asp-for="ArquivoLivro" />
 
             <div class="form-row">
                 <label>Título</label>
@@ -32,26 +36,13 @@
             </div>
 
             <div class="form-row">
-                <label>Imagem da capa</label>
-                <input asp-for="ImagemCapa" class="form-control" />
+                <label>Trocar imagem da capa</label>
+                <input asp-for="ImagemCapaArquivo" type="file" accept="image/*" class="form-control" />
             </div>
 
             <div class="form-row">
-                <label>Tipo de acesso</label>
-                <select asp-for="TipoAcesso" class="form-control">
-                    <option value="DIGITAL">Digital</option>
-                    <option value="COMPRA">Compra</option>
-                </select>
-            </div>
-
-            <div class="form-row">
-                <label>Link de compra</label>
-                <input asp-for="LinkCompra" class="form-control" />
-            </div>
-
-            <div class="form-row">
-                <label>Arquivo do livro</label>
-                <input asp-for="ArquivoLivro" class="form-control" />
+                <label>Trocar arquivo do livro</label>
+                <input asp-for="ArquivoLivroArquivo" type="file" accept=".pdf,.txt,.epub,.doc,.docx,application/pdf,text/plain" class="form-control" />
             </div>
 
             <div class="form-row">
@@ -61,8 +52,22 @@
 
             <div class="form-row">
                 <label>
-                    <input asp-for="LivroGratis" id="livroGratis" type="checkbox" />
+                    <input asp-for="LivroGratis" type="checkbox" />
                     Livro gratuito
+                </label>
+            </div>
+
+            <div class="form-row">
+                <label>
+                    <input asp-for="PossuiDigital" type="checkbox" />
+                    Versão digital
+                </label>
+            </div>
+
+            <div class="form-row">
+                <label>
+                    <input asp-for="PossuiFisico" type="checkbox" />
+                    Versão física
                 </label>
             </div>
 
@@ -84,5 +89,17 @@
                 <button type="submit" class="btn-twitter">Atualizar</button>
             </div>
         </form>
+
+        @if (!string.IsNullOrWhiteSpace(Model.ImagemCapa))
+        {
+            <div style="margin-top:18px;">
+                <p class="muted">Imagem atual:</p>
+                <img src="@Model.ImagemCapa" alt="Capa atual" style="width:140px;height:200px;object-fit:cover;border-radius:14px;" />
+            </div>
+        }
     </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -21,6 +21,7 @@ namespace ProjetoLetraria.Data
         public DbSet<CarrinhoItem> Carrinho { get; set; }
         public DbSet<Curtida> Curtidas { get; set; }
         public DbSet<ComentarioAvaliacao> ComentariosAvaliacao { get; set; }
+        public DbSet<Seguindo> Seguindo { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -72,6 +73,27 @@ namespace ProjetoLetraria.Data
                 .HasOne(x => x.Usuario)
                 .WithMany()
                 .HasForeignKey(x => x.IdUsuario);
+
+            modelBuilder.Entity<Seguindo>()
+                .HasIndex(x => new { x.IdSeguidor, x.IdSeguido })
+                .IsUnique();
+
+            modelBuilder.Entity<Seguindo>()
+                .HasOne(x => x.Seguidor)
+                .WithMany()
+                .HasForeignKey(x => x.IdSeguidor)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Seguindo>()
+                .HasOne(x => x.Seguido)
+                .WithMany()
+                .HasForeignKey(x => x.IdSeguido)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<CarrinhoItem>()
+                .HasOne(x => x.Livro)
+                .WithMany()
+                .HasForeignKey(x => x.IdLivro);
         }
     }
 }

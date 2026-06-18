@@ -49,15 +49,47 @@
         <div class="feed-list">
             @foreach (var post in Model.AvaliacoesRecentes)
             {
+                var idLogado = Context.Session.GetInt32("IdUsuario");
+                var tipoLogado = Context.Session.GetString("TipoUsuario");
+                var podeExcluir = tipoLogado == "ADMIN" || tipoLogado == "PROFESSOR" || (idLogado.HasValue && idLogado.Value == post.Usuario?.IdUsuario);
+
                 <article class="post-card">
                     <div class="post-head">
-                        <img src="@(string.IsNullOrWhiteSpace(post.Usuario?.FotoPerfil) ? "/imagens/usuario-padrao.png" : post.Usuario!.FotoPerfil)"
-                             class="avatar-post" />
+                        <a asp-controller="Usuario"
+                           asp-action="Perfil"
+                           asp-route-id="@post.Usuario!.IdUsuario"
+                           class="profile-link">
+                            <img src="@(string.IsNullOrWhiteSpace(post.Usuario?.FotoPerfil) ? "/imagens/usuario-padrao.png" : post.Usuario!.FotoPerfil)"
+                                 class="avatar-post" />
+                        </a>
 
                         <div>
-                            <strong>@(post.Usuario?.NomeExibicao ?? post.Usuario?.Nome)</strong>
-                            <div class="muted">@post.DataAvaliacao.ToString("dd/MM/yyyy HH:mm")</div>
+                            <a asp-controller="Usuario"
+                               asp-action="Perfil"
+                               asp-route-id="@post.Usuario!.IdUsuario"
+                               class="profile-link-name">
+                                <strong>@(post.Usuario?.NomeExibicao ?? post.Usuario?.Nome)</strong>
+                                <span class="role-badge @(post.Usuario?.TipoUsuario?.ToLower() ?? "aluno")">@post.Usuario?.TipoUsuario</span>
+                            </a>
+
+                            <div class="muted">
+                                @post.DataAvaliacao.ToString("dd/MM/yyyy HH:mm")
+                            </div>
                         </div>
+
+                        @if (podeExcluir)
+                        {
+                            <details class="post-menu">
+                                <summary class="post-menu-btn">⋯</summary>
+                                <div class="post-menu-box">
+                                    <form asp-controller="Feed" asp-action="ExcluirAvaliacao" method="post">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@post.IdAvaliacao" />
+                                        <button type="submit" class="post-menu-action danger">Excluir opinião</button>
+                                    </form>
+                                </div>
+                            </details>
+                        }
                     </div>
 
                     <h3 class="post-book">@post.Livro?.Titulo</h3>
@@ -65,16 +97,35 @@
                     <p class="post-text">@post.Comentario</p>
 
                     <div class="acoes-post">
-                        <span>❤️ @post.Curtidas.Count</span>
-                        <span>💬 @post.Comentarios.Count</span>
+                        <form asp-controller="Feed" asp-action="Curtir" method="post" class="like-form">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@post.IdAvaliacao" />
+                            <button type="submit" class="btn-like">
+                                <span class="like-icon">❤️</span>
+                                <span class="like-count">@post.Curtidas.Count</span>
+                            </button>
+                        </form>
+
+                        <span class="muted">💬 @post.Comentarios.Count</span>
                     </div>
 
                     <div class="comentarios-feed">
-                        @foreach (var comentario in post.Comentarios.OrderByDescending(c => c.DataComentario).Take(3))
+                        @foreach (var comentario in post.Comentarios.OrderByDescending(c => c.DataComentario))
                         {
                             <div class="comentario-feed">
-                                <strong>@(comentario.Usuario?.NomeExibicao ?? comentario.Usuario?.Nome)</strong>
-                                <p>@comentario.Texto</p>
+                                <img src="@(string.IsNullOrWhiteSpace(comentario.Usuario?.FotoPerfil) ? "/imagens/usuario-padrao.png" : comentario.Usuario!.FotoPerfil)"
+                                     class="comentario-avatar" />
+
+                                <div class="comentario-body">
+                                    <a asp-controller="Usuario"
+                                       asp-action="Perfil"
+                                       asp-route-id="@comentario.Usuario!.IdUsuario"
+                                       class="profile-link-name">
+                                        <strong>@(comentario.Usuario?.NomeExibicao ?? comentario.Usuario?.Nome)</strong>
+                                        <span class="role-badge @(comentario.Usuario?.TipoUsuario?.ToLower() ?? "aluno")">@comentario.Usuario?.TipoUsuario</span>
+                                    </a>
+                                    <p>@comentario.Texto</p>
+                                </div>
                             </div>
                         }
                     </div>
@@ -89,23 +140,6 @@
             }
         </div>
     </section>
-
-
-        <div class="panel-card">
-            <h3>Livros em destaque</h3>
-
-            @foreach (var livro in Model.LivrosRecentes.Take(6))
-            {
-                <a asp-controller="Loja" asp-action="Index" class="spot-book">
-                    <img src="@(string.IsNullOrWhiteSpace(livro.ImagemCapa) ? "/imagens/capa-padrao.jpg" : livro.ImagemCapa)"
-                         class="spot-cover" />
-                    <div>
-                        <strong>@livro.Titulo</strong>
-                        <div class="muted">@livro.Autor</div>
-                    </div>
-                </a>
-            }
-        </div>
 </div>
 
 @section Scripts {

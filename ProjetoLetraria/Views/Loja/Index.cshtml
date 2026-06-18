@@ -1,5 +1,5 @@
 ﻿@* Views/Loja/Index.cshtml *@
-@model List<ProjetoLetraria.Models.Livro>
+@model ProjetoLetraria.ViewModels.LojaIndexViewModel
 @{
     ViewData["Title"] = "Loja";
 }
@@ -12,16 +12,14 @@
         </div>
 
         <form class="shop-search" method="get" asp-action="Index">
-            <input type="text" name="q" placeholder="Pesquisar por título, autor ou gênero" value="@Context.Request.Query["q"]" />
+            <input type="text" name="q" placeholder="Pesquisar por título, autor ou gênero" value="@Model.Termo" />
             <button type="submit">Buscar</button>
         </form>
     </div>
 
     <div class="shop-grid">
-        @foreach (var livro in Model)
+        @foreach (var livro in Model.Livros)
         {
-            var gratuito = (livro.Preco ?? 0m) <= 0m;
-
             <article class="product-card">
                 <img src="@(string.IsNullOrWhiteSpace(livro.ImagemCapa) ? "/imagens/capa-padrao.jpg" : livro.ImagemCapa)"
                      class="product-cover" />
@@ -30,25 +28,53 @@
                     <h3>@livro.Titulo</h3>
                     <div class="muted">@livro.Autor</div>
 
-                    @if (gratuito)
+                    <div class="book-badges">
+                        @if (livro.PossuiDigital)
+                        {
+                            <span class="book-badge digital">Digital</span>
+                        }
+                        @if (livro.PossuiFisico)
+                        {
+                            <span class="book-badge fisico">Físico</span>
+                        }
+                    </div>
+
+                    @if (livro.Gratuito)
                     {
                         <div class="product-price">Gratuito</div>
                         <span class="rescue-badge">Resgate grátis</span>
                     }
                     else
                     {
-                        <div class="product-price">R$ @((livro.Preco ?? 0).ToString("0.00"))</div>
+                        <div class="product-price">R$ @livro.Preco.ToString("0.00")</div>
+                    }
+
+                    @if (livro.NaBiblioteca)
+                    {
+                        <span class="rescue-badge" style="margin-top:10px;background:#10391f;color:#8ef0ad;">Já na biblioteca</span>
+                    }
+                    else if (livro.JaAdquirido)
+                    {
+                        <span class="rescue-badge" style="margin-top:10px;">Já adquirido</span>
                     }
 
                     <div class="product-actions">
-                        @if (gratuito)
+                        @if (livro.Gratuito)
                         {
                             <a asp-controller="Loja" asp-action="Resgatar" asp-route-id="@livro.IdLivro" class="btn-twitter">Resgatar</a>
                         }
                         else
                         {
-                            <a asp-controller="Carrinho" asp-action="Adicionar" asp-route-id="@livro.IdLivro" class="btn-secondary">Adicionar</a>
-                            <a asp-controller="Carrinho" asp-action="Adicionar" asp-route-id="@livro.IdLivro" class="btn-twitter">Comprar</a>
+                            <form asp-controller="Carrinho" asp-action="AdicionarAjax" method="post" class="add-cart-form">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@livro.IdLivro" />
+                                <button type="submit" class="btn-twitter">Adicionar ao carrinho</button>
+                            </form>
+                        }
+
+                        @if (livro.NaBiblioteca)
+                        {
+                            <a asp-controller="Biblioteca" asp-action="Index" class="btn-secondary">Ler</a>
                         }
                     </div>
                 </div>

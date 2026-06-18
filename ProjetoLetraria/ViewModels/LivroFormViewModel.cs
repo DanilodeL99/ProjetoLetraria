@@ -1,5 +1,7 @@
-﻿using ProjetoLetraria.Models;
+﻿// ViewModels/LivroFormViewModel.cs
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
+using ProjetoLetraria.Models;
 
 namespace ProjetoLetraria.ViewModels
 {
@@ -20,6 +22,7 @@ namespace ProjetoLetraria.ViewModels
         public string Genero { get; set; } = string.Empty;
 
         public string? ImagemCapa { get; set; }
+        public IFormFile? ImagemCapaArquivo { get; set; }
 
         [Required(ErrorMessage = "O tipo de acesso é obrigatório.")]
         public string TipoAcesso { get; set; } = "DIGITAL";
@@ -27,13 +30,16 @@ namespace ProjetoLetraria.ViewModels
         public string? LinkCompra { get; set; }
 
         public string? ArquivoLivro { get; set; }
+        public IFormFile? ArquivoLivroArquivo { get; set; }
 
         public decimal? Preco { get; set; }
 
         public bool LivroGratis { get; set; }
 
-        public List<int> TagsSelecionadas { get; set; } = new();
+        public bool PossuiDigital { get; set; } = true;
+        public bool PossuiFisico { get; set; } = false;
 
+        public List<int> TagsSelecionadas { get; set; } = new();
         public List<Tag> TagsDisponiveis { get; set; } = new();
     }
 }

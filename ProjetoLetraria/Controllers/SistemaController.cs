@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿// Controllers/SistemaController.cs
+using Microsoft.AspNetCore.Mvc;
 
 namespace ProjetoLetraria.Controllers
 {

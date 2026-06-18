@@ -4,6 +4,7 @@
     var nomeUsuario = Context.Session.GetString("UsuarioNome");
     var tipoUsuario = Context.Session.GetString("TipoUsuario");
     var fotoPerfil = Context.Session.GetString("FotoPerfil");
+    var idUsuario = Context.Session.GetInt32("IdUsuario");
     var fotoMostrada = string.IsNullOrWhiteSpace(fotoPerfil) ? "/imagens/usuario-padrao.png" : fotoPerfil;
     var tema = Context.Request.Cookies["tema"] ?? "dark";
     var bodyClass = tema == "light" ? "theme-light" : "theme-dark";
@@ -46,9 +47,10 @@
                         <span>Loja</span>
                     </a>
 
-                    <a asp-controller="Carrinho" asp-action="Index">
+                    <a asp-controller="Carrinho" asp-action="Index" class="menu-cart-link">
                         <i class="fa-solid fa-basket-shopping"></i>
                         <span>Carrinho</span>
+                        @await Component.InvokeAsync("CarrinhoCount")
                     </a>
 
                     <a asp-controller="Biblioteca" asp-action="Index">
@@ -56,10 +58,18 @@
                         <span>Biblioteca</span>
                     </a>
 
+                    @if (idUsuario.HasValue)
+                    {
+                        <a asp-controller="Usuario" asp-action="Perfil" asp-route-id="@idUsuario.Value">
+                            <i class="fa-solid fa-user"></i>
+                            <span>Profile</span>
+                        </a>
+                    }
+
                     @if (tipoUsuario == "ADMIN")
                     {
                         <a asp-controller="Admin" asp-action="Livros">
-                            <i class="fa-solid fa-shield"></i>
+                            <i class="fa-solid fa-shield-halved"></i>
                             <span>Painel Admin</span>
                         </a>
                     }
@@ -78,12 +88,17 @@
                     </button>
 
                     <div id="menuPerfil" class="menu-perfil">
-                        <a asp-controller="Perfil" asp-action="Editar">
-                            <i class="fa-solid fa-user"></i> Minha Conta
-                        </a>
+                        @if (idUsuario.HasValue)
+                        {
+                            <a asp-controller="Usuario" asp-action="Perfil" asp-route-id="@idUsuario.Value">
+                                <i class="fa-solid fa-user"></i> Minha Conta
+                            </a>
+                        }
+
                         <a asp-controller="Sistema" asp-action="Configuracoes">
                             <i class="fa-solid fa-gear"></i> Configurações
                         </a>
+
                         <a asp-controller="Login" asp-action="Logout">
                             <i class="fa-solid fa-right-from-bracket"></i> Sair
                         </a>
@@ -97,10 +112,7 @@
         </main>
 
         <aside class="sidebar-direita">
-            <div class="card-lateral">
-                <h3>Sobre a Letraria</h3>
-                <p>Descubra, avalie e compartilhe livros com sua comunidade.</p>
-            </div>
+            @await Component.InvokeAsync("LivrosDestaque")
         </aside>
 
     </div>
@@ -116,7 +128,61 @@
                 if (menu) menu.classList.remove("mostrar");
             }
         }
+
+        document.addEventListener('submit', function (e) {
+            const form = e.target;
+
+            if (form.classList.contains('like-form')) {
+                e.preventDefault();
+
+                fetch(form.action, {
+                    method: 'POST',
+                    body: new FormData(form),
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if (!data || !data.success) return;
+
+                    const count = form.querySelector('.like-count');
+                    const icon = form.querySelector('.like-icon');
+
+                    if (count) count.textContent = data.total;
+                    if (icon) icon.textContent = data.liked ? '❤️' : '🤍';
+                });
+
+                return;
+            }
+
+            if (form.classList.contains('add-cart-form')) {
+                e.preventDefault();
+
+                fetch(form.action, {
+                    method: 'POST',
+                    body: new FormData(form),
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if (!data || !data.success) return;
+
+                    const badge = document.getElementById('cartCountBadge');
+                    if (badge) {
+                        badge.textContent = data.total;
+                        badge.classList.remove('cart-badge-hidden');
+                    }
+                });
+
+                return;
+            }
+        });
     </script>
+
+    
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

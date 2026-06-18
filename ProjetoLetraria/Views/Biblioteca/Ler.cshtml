@@ -1,0 +1,30 @@
+﻿@* Views/Biblioteca/Ler.cshtml *@
+@model ProjetoLetraria.Models.Livro
+@{
+    ViewData["Title"] = Model.Titulo;
+}
+
+<div class="reader-page">
+    <div class="reader-toolbar">
+        <a asp-controller="Biblioteca" asp-action="Index" class="btn-secondary">Voltar</a>
+        <div>
+            <h1 style="margin:0;">@Model.Titulo</h1>
+            <p class="muted" style="margin:4px 0 0;">@Model.Autor</p>
+        </div>
+    </div>
+
+    <div class="reader-window">
+        @if (!string.IsNullOrWhiteSpace(Model.ArquivoLivro))
+        {
+            <iframe src="@Url.Action("Arquivo", "Biblioteca", new { id = Model.IdLivro })"
+                    class="reader-frame"
+                    title="@Model.Titulo"></iframe>
+        }
+        else
+        {
+            <div class="reader-empty">
+                Este livro ainda não possui arquivo disponível para leitura.
+            </div>
+        }
+    </div>
+</div>

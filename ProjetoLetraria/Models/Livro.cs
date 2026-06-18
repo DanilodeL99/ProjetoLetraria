@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿// Models/Livro.cs
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProjetoLetraria.Models
@@ -47,13 +48,16 @@ namespace ProjetoLetraria.Models
         [Column("preco")]
         public decimal? Preco { get; set; }
 
+        [Column("possui_digital")]
+        public bool PossuiDigital { get; set; } = true;
+
+        [Column("possui_fisico")]
+        public bool PossuiFisico { get; set; } = false;
+
         [Column("data_cadastro")]
         public DateTime DataCadastro { get; set; }
 
-        public ICollection<LivroTag> LivroTags { get; set; }
-            = new List<LivroTag>();
-
-        public ICollection<Avaliacao> Avaliacoes { get; set; }
-            = new List<Avaliacao>();
+        public ICollection<LivroTag> LivroTags { get; set; } = new List<LivroTag>();
+        public ICollection<Avaliacao> Avaliacoes { get; set; } = new List<Avaliacao>();
     }
 }

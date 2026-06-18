@@ -1,0 +1,11 @@
+﻿@* Views/Shared/Components/CarrinhoCount/Default.cshtml *@
+@model int
+
+@if (Model > 0)
+{
+    <span class="cart-badge" id="cartCountBadge">@Model</span>
+}
+else
+{
+    <span class="cart-badge cart-badge-hidden" id="cartCountBadge">0</span>
+}

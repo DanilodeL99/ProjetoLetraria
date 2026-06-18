@@ -1,4 +1,4 @@
-﻿// ===== Models/Compra.cs =====
+﻿// Models/Compra.cs
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -17,8 +17,23 @@ namespace ProjetoLetraria.Models
         [Column("id_livro")]
         public int IdLivro { get; set; }
 
+        [Column("quantidade")]
+        public int Quantidade { get; set; } = 1;
+
+        [Column("formato_compra")]
+        public string FormatoCompra { get; set; } = "DIGITAL";
+
         [Column("valor")]
         public decimal Valor { get; set; }
+
+        [Column("frete")]
+        public decimal Frete { get; set; }
+
+        [Column("cep")]
+        public string? Cep { get; set; }
+
+        [Column("endereco_entrega")]
+        public string? EnderecoEntrega { get; set; }
 
         [StringLength(20)]
         [Column("metodo_pagamento")]

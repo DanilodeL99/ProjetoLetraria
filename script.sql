@@ -204,3 +204,30 @@ INSERT INTO tags (nome) VALUES
 ALTER TABLE usuarios
 ADD COLUMN nome_exibicao VARCHAR(100) NULL,
 ADD COLUMN foto_perfil VARCHAR(255) NULL;
+
+CREATE TABLE seguindo (
+    id_seguindo INT PRIMARY KEY AUTO_INCREMENT,
+    id_seguidor INT NOT NULL,
+    id_seguido INT NOT NULL,
+    data_seguimento DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY uq_seguindo (id_seguidor, id_seguido),
+    FOREIGN KEY (id_seguidor) REFERENCES usuarios(id_usuario) ON DELETE CASCADE,
+    FOREIGN KEY (id_seguido) REFERENCES usuarios(id_usuario) ON DELETE CASCADE
+);
+
+-- ALTERS
+ALTER TABLE livros
+ADD COLUMN possui_digital BOOLEAN NOT NULL DEFAULT TRUE,
+ADD COLUMN possui_fisico BOOLEAN NOT NULL DEFAULT FALSE;
+
+ALTER TABLE carrinho
+ADD COLUMN formato_selecionado VARCHAR(20) NOT NULL DEFAULT 'DIGITAL';
+
+ALTER TABLE compras
+ADD COLUMN quantidade INT NOT NULL DEFAULT 1,
+ADD COLUMN formato_compra VARCHAR(20) NOT NULL DEFAULT 'DIGITAL',
+ADD COLUMN cep VARCHAR(20) NULL,
+ADD COLUMN endereco_entrega TEXT NULL,
+ADD COLUMN frete DECIMAL(10,2) NOT NULL DEFAULT 0;
+
+

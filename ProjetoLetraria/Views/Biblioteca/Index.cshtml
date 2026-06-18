@@ -13,9 +13,16 @@
             <article class="library-card">
                 <img src="@(string.IsNullOrWhiteSpace(livro.ImagemCapa) ? "/imagens/capa-padrao.jpg" : livro.ImagemCapa)"
                      class="library-cover" />
+
                 <h3>@livro.Titulo</h3>
                 <p class="muted">@livro.Autor</p>
-                <a href="#" class="btn-twitter full-width">Ler livro</a>
+
+                <a asp-controller="Biblioteca"
+                   asp-action="Ler"
+                   asp-route-id="@livro.IdLivro"
+                   class="btn-twitter full-width">
+                    Ler livro
+                </a>
             </article>
         }
     </div>

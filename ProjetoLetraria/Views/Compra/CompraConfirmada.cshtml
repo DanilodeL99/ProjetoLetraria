@@ -1,0 +1,18 @@
+﻿@* Views/Compra/CompraConfirmada.cshtml *@
+@{
+    ViewData["Title"] = "Compra confirmada";
+}
+
+<div class="checkout-page">
+    <div class="checkout-card" style="max-width:760px;margin:0 auto;">
+        <h1>Compra confirmada</h1>
+
+        @if (TempData["CompraSucesso"] != null)
+        {
+            <p>@TempData["CompraSucesso"]</p>
+        }
+
+        <a asp-controller="Biblioteca" asp-action="Index" class="btn-twitter">Ir para biblioteca</a>
+        <a asp-controller="Loja" asp-action="Index" class="btn-secondary" style="margin-left:10px;">Voltar à loja</a>
+    </div>
+</div>

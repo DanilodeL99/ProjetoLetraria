@@ -10,7 +10,11 @@
             <h1>Painel Admin</h1>
             <p>Gerencie livros da plataforma.</p>
         </div>
-        <a asp-action="AdicionarLivro" class="btn-twitter">Adicionar livro</a>
+
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <a asp-action="Dashboard" class="btn-secondary">Dashboard</a>
+            <a asp-action="AdicionarLivro" class="btn-twitter">Adicionar livro</a>
+        </div>
     </div>
 
     <div class="admin-table-card">

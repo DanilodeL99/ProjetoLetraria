@@ -1,45 +1,147 @@
-﻿@* Views/Compra/Finalizar.cshtml *@
-@model List<ProjetoLetraria.Models.CarrinhoItem>
-
-<h1>Finalizar Compra</h1>
-
+﻿@model ProjetoLetraria.ViewModels.FinalizarCompraViewModel
 @{
-    decimal total = 0;
+    ViewData["Title"] = "Finalizar compra";
 }
 
-@if (Model != null && Model.Any())
-{
-    foreach (var item in Model)
-    {
-        total += (item.Livro?.Preco ?? 0) * item.Quantidade;
+<div class="checkout-page">
+    <div class="checkout-header">
+        <h1>Finalizar compra</h1>
+        <p class="muted">Revise os itens e escolha a forma de pagamento.</p>
+    </div>
 
-        <div class="produto-finalizar">
-            <h3>@item.Livro?.Titulo</h3>
-            <p>@item.Livro?.Autor</p>
-            <p>R$ @((item.Livro?.Preco ?? 0).ToString("0.00"))</p>
+    <form asp-action="ConfirmarCompra" method="post" class="checkout-grid">
+        @Html.AntiForgeryToken()
+
+        <div class="checkout-main">
+            <div class="checkout-card">
+                <h2>Itens no carrinho</h2>
+
+                @for (var i = 0; i < Model.Itens.Count; i++)
+                {
+                    <input type="hidden" asp-for="Itens[i].IdCarrinho" />
+                    <input type="hidden" asp-for="Itens[i].IdLivro" />
+                    <input type="hidden" asp-for="Itens[i].Titulo" />
+                    <input type="hidden" asp-for="Itens[i].Autor" />
+                    <input type="hidden" asp-for="Itens[i].ImagemCapa" />
+                    <input type="hidden" asp-for="Itens[i].Quantidade" />
+                    <input type="hidden" asp-for="Itens[i].PrecoUnitario" />
+                    <input type="hidden" asp-for="Itens[i].PossuiDigital" />
+                    <input type="hidden" asp-for="Itens[i].PossuiFisico" />
+                    <input type="hidden" asp-for="Itens[i].FormatoSelecionado" />
+
+                    <article class="checkout-item">
+                        <img src="@(string.IsNullOrWhiteSpace(Model.Itens[i].ImagemCapa) ? "/imagens/capa-padrao.jpg" : Model.Itens[i].ImagemCapa)"
+                             class="checkout-cover" />
+
+                        <div class="checkout-item-body">
+                            <h3>@Model.Itens[i].Titulo</h3>
+                            <div class="muted">@Model.Itens[i].Autor</div>
+
+                            <div class="book-badges">
+                                @if (Model.Itens[i].PossuiDigital)
+                                {
+                                    <span class="book-badge digital">Digital</span>
+                                }
+                                @if (Model.Itens[i].PossuiFisico)
+                                {
+                                    <span class="book-badge fisico">Físico</span>
+                                }
+                            </div>
+
+                            <div class="checkout-line">
+                                <span>Qtd: @Model.Itens[i].Quantidade</span>
+                                <span>R$ @Model.Itens[i].PrecoUnitario.ToString("0.00")</span>
+                            </div>
+                        </div>
+                    </article>
+                }
+            </div>
+
+            <div class="checkout-card">
+                <h2>Pagamento</h2>
+
+                <div class="payment-switch">
+                    <label class="payment-option">
+                        <input type="radio" name="MetodoPagamento" value="PIX" checked />
+                        <span>PIX</span>
+                    </label>
+
+                    <label class="payment-option">
+                        <input type="radio" name="MetodoPagamento" value="CARTAO" />
+                        <span>Cartão</span>
+                    </label>
+                </div>
+
+                <div id="pixBox" class="payment-box">
+                    <div class="pix-card">
+                        <h3>Pagamento via PIX</h3>
+                        <img src="~/imagens/pix.jpg" class="pix-qrcode" alt="QR Code PIX" />
+                        <p>Escaneie o QR Code acima para concluir o pagamento.</p>
+                    </div>
+                </div>
+
+                <div id="cardBox" class="payment-box" style="display:none;">
+                    <div class="grid-2">
+                        <div class="form-row">
+                            <label>Nome no cartão</label>
+                            <input asp-for="NomeTitular" class="form-control" />
+                            <span asp-validation-for="NomeTitular" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-row">
+                            <label>Número do cartão</label>
+                            <input asp-for="NumeroCartao" class="form-control" />
+                            <span asp-validation-for="NumeroCartao" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-row">
+                            <label>Validade</label>
+                            <input asp-for="ValidadeCartao" class="form-control" placeholder="MM/AA" />
+                            <span asp-validation-for="ValidadeCartao" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-row">
+                            <label>CVV</label>
+                            <input asp-for="Cvv" class="form-control" />
+                            <span asp-validation-for="Cvv" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    }
 
-    <hr />
-
-    <h2>Total: R$ @total.ToString("0.00")</h2>
-
-    <form asp-action="ConfirmarCompra" method="post">
-        <h3>Forma de pagamento</h3>
-
-        <select name="metodoPagamento">
-            <option value="PIX">PIX</option>
-            <option value="CARTAO">Cartão</option>
-        </select>
-
-        <br />
-        <br />
-
-        <button type="submit">Confirmar Compra</button>
+        <aside class="checkout-summary">
+            <div class="summary-card">
+                <h3>Resumo do pedido</h3>
+                <p>Subtotal: <strong>R$ @Model.Subtotal.ToString("0.00")</strong></p>
+                <p>Frete: <strong>R$ @Model.Frete.ToString("0.00")</strong></p>
+                <p>Total: <strong>R$ @Model.Total.ToString("0.00")</strong></p>
+                <button type="submit" class="btn-twitter full-width">Confirmar compra</button>
+            </div>
+        </aside>
     </form>
-}
-else
-{
-    <p>Seu carrinho está vazio.</p>
-    <a asp-controller="Loja" asp-action="Index">Voltar para a loja</a>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        const radios = document.querySelectorAll('input[name="MetodoPagamento"]');
+        const pixBox = document.getElementById('pixBox');
+        const cardBox = document.getElementById('cardBox');
+
+        function updatePayment() {
+            const selected = document.querySelector('input[name="MetodoPagamento"]:checked')?.value;
+
+            if (pixBox) {
+                pixBox.style.display = selected === 'PIX' ? 'block' : 'none';
+            }
+
+            if (cardBox) {
+                cardBox.style.display = selected === 'CARTAO' ? 'block' : 'none';
+            }
+        }
+
+        radios.forEach(radio => radio.addEventListener('change', updatePayment));
+        updatePayment();
+    </script>
 }

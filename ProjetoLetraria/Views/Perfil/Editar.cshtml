@@ -1,65 +1,71 @@
-﻿@* Views/Perfil/Editar.cshtml *@
+﻿
 @model ProjetoLetraria.ViewModels.EditarPerfilViewModel
 
-<div class="card-panel perfil-page">
-    <h1>Configurações da conta</h1>
+<div class="perfil-page">
+    <div class="card-panel">
+        <h1>Minha conta</h1>
 
-    <form asp-action="Editar" method="post" enctype="multipart/form-data" class="perfil-form">
-        <div class="grid-2">
-            <div class="form-row">
-                <label>Nome</label>
-                <input asp-for="Nome" class="form-control" />
-                <span asp-validation-for="Nome" class="text-danger"></span>
+        <form asp-action="Editar" method="post" enctype="multipart/form-data" class="perfil-form">
+            @Html.AntiForgeryToken()
+
+            <div class="grid-2">
+                <div class="form-row">
+                    <label>Nome</label>
+                    <input asp-for="Nome" class="form-control" />
+                    <span asp-validation-for="Nome" class="text-danger"></span>
+                </div>
+
+                <div class="form-row">
+                    <label>Nome de exibição</label>
+                    <input asp-for="NomeExibicao" class="form-control" />
+                    <span asp-validation-for="NomeExibicao" class="text-danger"></span>
+                </div>
             </div>
 
             <div class="form-row">
-                <label>Nome de exibição</label>
-                <input asp-for="NomeExibicao" class="form-control" />
-                <span asp-validation-for="NomeExibicao" class="text-danger"></span>
-            </div>
-        </div>
-
-        <div class="form-row">
-            <label>E-mail</label>
-            <input asp-for="Email" class="form-control" />
-            <span asp-validation-for="Email" class="text-danger"></span>
-        </div>
-
-        <div class="form-row">
-            <label>Foto de perfil</label>
-            @if (!string.IsNullOrWhiteSpace(Model.FotoAtual))
-            {
-                <img src="@Model.FotoAtual" class="perfil-preview" />
-            }
-            <input asp-for="FotoArquivo" type="file" class="form-control" />
-        </div>
-
-        <hr />
-
-        <h3>Alterar senha</h3>
-
-        <div class="grid-3">
-            <div class="form-row">
-                <label>Senha atual</label>
-                <input asp-for="SenhaAtual" type="password" class="form-control" />
-                <span asp-validation-for="SenhaAtual" class="text-danger"></span>
+                <label>E-mail</label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
             </div>
 
             <div class="form-row">
-                <label>Nova senha</label>
-                <input asp-for="NovaSenha" type="password" class="form-control" />
-                <span asp-validation-for="NovaSenha" class="text-danger"></span>
+                <label>Foto de perfil</label>
+
+                @if (!string.IsNullOrWhiteSpace(Model.FotoAtual))
+                {
+                    <img src="@Model.FotoAtual" class="perfil-preview" />
+                }
+
+                <input asp-for="FotoArquivo" type="file" class="form-control" />
             </div>
 
-            <div class="form-row">
-                <label>Confirmar nova senha</label>
-                <input asp-for="ConfirmarNovaSenha" type="password" class="form-control" />
-                <span asp-validation-for="ConfirmarNovaSenha" class="text-danger"></span>
-            </div>
-        </div>
+            <hr />
 
-        <button type="submit" class="btn-twitter">Salvar alterações</button>
-    </form>
+            <h3>Alterar senha</h3>
+
+            <div class="grid-3">
+                <div class="form-row">
+                    <label>Senha atual</label>
+                    <input asp-for="SenhaAtual" type="password" class="form-control" />
+                    <span asp-validation-for="SenhaAtual" class="text-danger"></span>
+                </div>
+
+                <div class="form-row">
+                    <label>Nova senha</label>
+                    <input asp-for="NovaSenha" type="password" class="form-control" />
+                    <span asp-validation-for="NovaSenha" class="text-danger"></span>
+                </div>
+
+                <div class="form-row">
+                    <label>Confirmar nova senha</label>
+                    <input asp-for="ConfirmarNovaSenha" type="password" class="form-control" />
+                    <span asp-validation-for="ConfirmarNovaSenha" class="text-danger"></span>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-twitter">Salvar alterações</button>
+        </form>
+    </div>
 </div>
 
 @section Scripts {

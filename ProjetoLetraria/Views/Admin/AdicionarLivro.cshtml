@@ -8,7 +8,9 @@
     <div class="admin-form-card">
         <h1>Adicionar livro</h1>
 
-        <form asp-action="AdicionarLivro" method="post" class="admin-form-grid">
+        <form asp-action="AdicionarLivro" method="post" enctype="multipart/form-data" class="admin-form-grid">
+            @Html.AntiForgeryToken()
+
             <div class="form-row">
                 <label>Título</label>
                 <input asp-for="Titulo" class="form-control" />
@@ -34,25 +36,12 @@
 
             <div class="form-row">
                 <label>Imagem da capa</label>
-                <input asp-for="ImagemCapa" class="form-control" />
-            </div>
-
-            <div class="form-row">
-                <label>Tipo de acesso</label>
-                <select asp-for="TipoAcesso" class="form-control">
-                    <option value="DIGITAL">Digital</option>
-                    <option value="COMPRA">Compra</option>
-                </select>
-            </div>
-
-            <div class="form-row">
-                <label>Link de compra</label>
-                <input asp-for="LinkCompra" class="form-control" />
+                <input asp-for="ImagemCapaArquivo" type="file" accept="image/*" class="form-control" />
             </div>
 
             <div class="form-row">
                 <label>Arquivo do livro</label>
-                <input asp-for="ArquivoLivro" class="form-control" />
+                <input asp-for="ArquivoLivroArquivo" type="file" accept=".pdf,.txt,.epub,.doc,.docx,application/pdf,text/plain" class="form-control" />
             </div>
 
             <div class="form-row">
@@ -62,8 +51,22 @@
 
             <div class="form-row">
                 <label>
-                    <input asp-for="LivroGratis" id="livroGratis" type="checkbox" />
+                    <input asp-for="LivroGratis" type="checkbox" />
                     Livro gratuito
+                </label>
+            </div>
+
+            <div class="form-row">
+                <label>
+                    <input asp-for="PossuiDigital" type="checkbox" />
+                    Versão digital
+                </label>
+            </div>
+
+            <div class="form-row">
+                <label>
+                    <input asp-for="PossuiFisico" type="checkbox" />
+                    Versão física
                 </label>
             </div>
 
@@ -86,3 +89,7 @@
         </form>
     </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
